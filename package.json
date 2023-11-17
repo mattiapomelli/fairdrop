@@ -1,0 +1,41 @@
+{
+  "name": "frame-eth",
+  "version": "1.0.0",
+  "description": "🖼️ forkable Ethereum dev stack focused on fast product iterations.",
+  "private": true,
+  "workspaces": {
+    "packages": [
+      "packages/contracts",
+      "packages/web",
+      "packages/explorer"
+    ]
+  },
+  "scripts": {
+    "check": "yarn workspace @fe/contracts check",
+    "clean": "yarn workspace @fe/contracts clean",
+    "compile": "yarn workspace @fe/contracts compile",
+    "console": "yarn workspace @fe/contracts console",
+    "coverage": "yarn workspace @fe/contracts coverage",
+    "deploy": "yarn workspace @fe/contracts deploy --save",
+    "flatten": "yarn workspace @fe/contracts flatten",
+    "generate": "yarn workspace @fe/contracts generate",
+    "help": "yarn workspace @fe/contracts run help",
+    "node": "yarn workspace @fe/contracts run node",
+    "chain": "yarn workspace @fe/contracts run node",
+    "test": "yarn workspace @fe/contracts test",
+    "verify": "yarn workspace @fe/contracts verify",
+
+    "dev": "yarn workspace @fe/web dev",
+    "build": "yarn workspace @fe/web build",
+    "start": "yarn workspace @fe/web start",
+    "lint": "yarn workspace @fe/web lint",
+    "vercel": "yarn workspace @fe/web vercel",
+
+    "explorer": "yarn workspace @fe/explorer dev --port 3001",
+
+    "web": "yarn workspace @fe/web",
+    "contracts": "yarn workspace @fe/contracts"
+  },
+  "author": "ahmedhamedaly",
+  "license": "MIT"
+}

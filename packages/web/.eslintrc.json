@@ -1,0 +1,47 @@
+{
+  "extends": ["next/core-web-vitals", "plugin:tailwindcss/recommended"],
+  "plugins": ["import", "@typescript-eslint", "unicorn", "tailwindcss"],
+  "rules": {
+    "@typescript-eslint/no-unused-vars": ["error"],
+    /* Sort imports */
+    "import/order": [
+      "error",
+      {
+        "groups": ["builtin", "external", "internal", "parent", "sibling", "index", "type"],
+        "newlines-between": "always",
+        "alphabetize": {
+          "order": "asc"
+        }
+      }
+    ],
+    /* Filenames kebab case */
+    "unicorn/filename-case": [
+      "error",
+      {
+        "case": "kebabCase"
+      }
+    ]
+  },
+  "settings": {
+    /* Support tailwind rules inside clsx */
+    "tailwindcss": {
+      "callees": ["clsx", "cva", "cn"],
+      "config": "tailwind.config.js"
+    }
+  },
+  /* No default export */
+  "overrides": [
+    {
+      "files": ["./src/**/*.ts", "./src/**/*.tsx"],
+      "rules": {
+        "import/no-default-export": "error"
+      }
+    },
+    {
+      "files": ["./src/app/**/*.ts", "./src/app/**/*.tsx"],
+      "rules": {
+        "import/no-default-export": "off"
+      }
+    }
+  ]
+}
