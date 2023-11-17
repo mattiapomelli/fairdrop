@@ -108,6 +108,8 @@ describe("Fairdrop", () => {
       );
       // Check withdrawableAt matches
       expect(deposit[5]).to.equal(withdrawableAt);
+      // Check claimed matches
+      expect(deposit[6]).to.equal(false);
     });
 
     it("should transfer the deposit amount to the contract", async () => {
@@ -163,11 +165,7 @@ describe("Fairdrop", () => {
         });
       });
 
-      it("Should deposit the tokens into the strategy protocol", async () => {
-        const demoFiStrategy = await viem.getContractAt(
-          "DemoFiStrategy",
-          demoFiStrategyAddress
-        );
+      it("Should deposit the tokens into the protocol of the strategy", async () => {
         const demoFi = await viem.getContractAt("DemoFi", demoFiAddress);
         const testErc20 = await viem.getContractAt(
           "TestERC20",
@@ -177,6 +175,25 @@ describe("Fairdrop", () => {
         // Check tokens were transferred to DemoFi
         const demoFiBalance = await testErc20.read.balanceOf([demoFi.address]);
         expect(demoFiBalance).to.equal(depositAmount);
+      });
+
+      it("Should mark the deposit as claimed", async () => {
+        const fairdrop = await viem.getContractAt("Fairdrop", fairdropAddress);
+        const deposit = await fairdrop.read.deposits([depositId]);
+
+        expect(deposit[6]).to.equal(true);
+      });
+
+      it("Deposit can't be claimed again", async () => {
+        const fairdrop = await viem.getContractAt("Fairdrop", fairdropAddress);
+
+        const password = toHex("password", {
+          size: 32,
+        });
+        const tx = fairdrop.write.claimDeposit([depositId, password], {
+          account: bob.account,
+        });
+        await expect(tx).to.be.rejectedWith("Deposit already claimed");
       });
     });
   });

@@ -15,6 +15,7 @@ contract Fairdrop {
         address tokenAddress;
         IStrategy strategy;
         uint256 withdrawableAt;
+        bool claimed;
     }
 
     Deposit[] public deposits;
@@ -68,7 +69,8 @@ contract Fairdrop {
                 amount: _tokenAmount,
                 tokenAddress: _tokenAddress,
                 withdrawableAt: _withdrawableAt,
-                strategy: _strategy
+                strategy: _strategy,
+                claimed: false
             })
         );
         uint256 depositId = deposits.length - 1;
@@ -86,7 +88,10 @@ contract Fairdrop {
     function claimDeposit(uint256 _depositId, bytes32 _password) public {
         // Check that the deposit exists and that it isn't already claimed
         require(_depositId < deposits.length, "Deposit doesn't exist");
-        Deposit memory deposit = deposits[_depositId];
+        Deposit storage deposit = deposits[_depositId];
+
+        require(!deposit.claimed, "Deposit already claimed");
+        deposit.claimed = true;
 
         require(
             deposit.hashedPassword == keccak256(abi.encodePacked(_password)),
