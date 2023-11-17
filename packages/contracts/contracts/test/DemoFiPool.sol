@@ -88,4 +88,14 @@ contract DemoFiPool is IPool {
             userAccountData[user].healthFactor
         );
     }
+
+    /**
+     * @notice Returns the state and configuration of the reserve
+     * @return The state and configuration data of the reserve
+     */
+    function getReserveData(
+        address
+    ) external view returns (IPool.ReserveData memory) {
+        return IPool.ReserveData({aTokenAddress: address(poolShareToken)});
+    }
 }

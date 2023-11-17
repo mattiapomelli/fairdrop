@@ -5,6 +5,10 @@ pragma solidity ^0.8.9;
  * @title IPool
  */
 interface IPool {
+    struct ReserveData {
+        address aTokenAddress;
+    }
+
     /**
      * @notice Supplies an `amount` of underlying asset into the reserve, receiving in return overlying aTokens.
      * - E.g. User supplies 100 USDC and gets in return 100 aUSDC
@@ -86,4 +90,13 @@ interface IPool {
             uint256 ltv,
             uint256 healthFactor
         );
+
+    /**
+     * @notice Returns the state and configuration of the reserve
+     * @param asset The address of the underlying asset of the reserve
+     * @return The state and configuration data of the reserve
+     */
+    function getReserveData(
+        address asset
+    ) external view returns (ReserveData memory);
 }

@@ -8,7 +8,7 @@ describe("Fairdrop", () => {
     bob: WalletClient,
     fairdropAddress: `0x${string}`,
     testErc20Address: `0x${string}`,
-    demoFiAddress: `0x${string}`,
+    demoFiPoolAddress: `0x${string}`,
     demoFiStrategyAddress: `0x${string}`,
     depositAmount = BigInt(100);
 
@@ -31,12 +31,12 @@ describe("Fairdrop", () => {
       "contracts/test/DemoFiPool.sol:DemoFiPool",
       []
     );
-    demoFiAddress = demoFi.address;
+    demoFiPoolAddress = demoFi.address;
 
     // Deploy DemoFiStrategy
     const demoFiStrategy = await viem.deployContract(
       "contracts/strategies/DemoFiStrategy.sol:DemoFiStrategy",
-      [fairdrop.address, demoFiAddress]
+      [fairdrop.address, demoFiPoolAddress]
     );
     demoFiStrategyAddress = demoFiStrategy.address;
   });
@@ -177,9 +177,9 @@ describe("Fairdrop", () => {
       });
 
       it("Should deposit the tokens into the protocol of the strategy", async () => {
-        const demoFi = await viem.getContractAt(
+        const demoFiPool = await viem.getContractAt(
           "contracts/test/DemoFiPool.sol:DemoFiPool",
-          demoFiAddress
+          demoFiPoolAddress
         );
         const testErc20 = await viem.getContractAt(
           "contracts/test/TestERC20.sol:TestERC20",
@@ -187,7 +187,9 @@ describe("Fairdrop", () => {
         );
 
         // Check tokens were transferred to DemoFi
-        const demoFiBalance = await testErc20.read.balanceOf([demoFi.address]);
+        const demoFiBalance = await testErc20.read.balanceOf([
+          demoFiPool.address,
+        ]);
         expect(demoFiBalance).to.equal(depositAmount);
       });
 
@@ -196,6 +198,29 @@ describe("Fairdrop", () => {
         const deposit = await fairdrop.read.deposits([depositId]);
 
         expect(deposit[6]).to.equal(true);
+      });
+
+      it("Should send the aToken to the fairdrop contract", async () => {
+        const fairdrop = await viem.getContractAt("Fairdrop", fairdropAddress);
+        const demoFiPool = await viem.getContractAt(
+          "contracts/test/DemoFiPool.sol:DemoFiPool",
+          demoFiPoolAddress
+        );
+
+        const reserveData = await demoFiPool.read.getReserveData([
+          testErc20Address,
+        ]);
+        const aToken = await viem.getContractAt(
+          "ERC20",
+          reserveData.aTokenAddress
+        );
+
+        // Get aToken balance of fairdrop contract
+        const fairdropATokenBalance = await aToken.read.balanceOf([
+          fairdrop.address,
+        ]);
+
+        expect(fairdropATokenBalance).to.equal(depositAmount);
       });
 
       it("Deposit can't be claimed again", async () => {
