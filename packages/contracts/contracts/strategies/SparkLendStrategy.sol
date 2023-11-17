@@ -10,8 +10,10 @@ import "hardhat/console.sol";
 
 contract SparkLendStrategy is IStrategy {
     ISparkLendPool private pool;
+    address private fairdropAddress;
 
-    constructor(address _pool) {
+    constructor(address _fairdropAddress, address _pool) {
+        fairdropAddress = _fairdropAddress;
         pool = ISparkLendPool(_pool);
     }
 
@@ -24,8 +26,6 @@ contract SparkLendStrategy is IStrategy {
             IERC20(token).approve(address(pool), type(uint256).max);
         }
 
-        pool.supply(token, amount, address(this), 0);
-
-        // TODO: transfer liquidity tokens to msg.sender
+        pool.supply(token, amount, fairdropAddress, 0);
     }
 }

@@ -4,7 +4,6 @@ import { verify } from "./utils/verify";
 
 import { setDeploymentAddress } from "../deployment/deployment-manager";
 import { SPARKLEND_POOL_ADDRESS_MAINNET } from "../utils/constants";
-import { Abi } from "viem";
 
 task(
   "deploy",
@@ -42,12 +41,15 @@ task(
 
     if (network.name !== "devnet") {
       // Deploy TestERC20
-      const testErc20 = await viem.deployContract("TestERC20", [
+      const testErc20 = await viem.deployContract(
+        "contracts/test/TestERC20.sol:TestERC20",
         [
-          deployer.account?.address as `0x${string}`,
-          alice.account?.address as `0x${string}`,
-        ],
-      ]);
+          [
+            deployer.account?.address as `0x${string}`,
+            alice.account?.address as `0x${string}`,
+          ],
+        ]
+      );
       console.log(
         `📰 Contract TestERC20 deployed to ${network.name} at ${testErc20.address}`
       );
@@ -63,9 +65,10 @@ task(
 
     if (network.name === "devnet") {
       // Deploy SparkLendStrategy
-      const sparkLendStrategy = await viem.deployContract("SparkLendStrategy", [
-        SPARKLEND_POOL_ADDRESS_MAINNET,
-      ]);
+      const sparkLendStrategy = await viem.deployContract(
+        "contracts/strategies/SparkLendStrategy.sol:SparkLendStrategy",
+        [fairdrop.address, SPARKLEND_POOL_ADDRESS_MAINNET]
+      );
       console.log(
         `📰 Contract SparkLendStrategy deployed to ${network.name} at ${sparkLendStrategy.address}`
       );
@@ -88,7 +91,10 @@ task(
       }
     } else {
       // Deploy DemoFi
-      const demoFi = await viem.deployContract("DemoFi", []);
+      const demoFi = await viem.deployContract(
+        "contracts/test/DemoFi.sol:DemoFi",
+        []
+      );
       console.log(
         `📰 Contract DemoFi deployed to ${network.name} at ${demoFi.address}`
       );
@@ -102,9 +108,10 @@ task(
       }
 
       // Deploy DemoFiStrategy
-      const demoFiStrategy = await viem.deployContract("DemoFiStrategy", [
-        demoFi.address,
-      ]);
+      const demoFiStrategy = await viem.deployContract(
+        "contracts/strategies/DemoFiStrategy.sol:DemoFiStrategy",
+        [demoFi.address]
+      );
       console.log(
         `📰 Contract DemoFiStrategy deployed to ${network.name} at ${demoFiStrategy.address}`
       );

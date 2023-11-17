@@ -14,10 +14,10 @@ async function main() {
     SPARKLEND_POOL_ADDRESS_MAINNET
   );
 
-  // const fairdrop = await viem.getContractAt(
-  //   "Fairdrop",
-  //   getDeploymentAddress(network, "Fairdrop")
-  // );
+  const fairdrop = await viem.getContractAt(
+    "Fairdrop",
+    getDeploymentAddress(network, "Fairdrop")
+  );
 
   const sparkLendStrategy = await viem.getContractAt(
     "contracts/strategies/SparkLendStrategy.sol:SparkLendStrategy",
@@ -25,11 +25,15 @@ async function main() {
   );
 
   // Get balances
-  const accountData = await sparkLendPool.read.getUserAccountData([
+  const fairdropAccountData = await sparkLendPool.read.getUserAccountData([
+    fairdrop.address,
+  ]);
+  console.log("Fairdrop Account data: ", fairdropAccountData);
+
+  const strategyAccountData = await sparkLendPool.read.getUserAccountData([
     sparkLendStrategy.address,
   ]);
-
-  console.log("Account data: ", accountData);
+  console.log("Strategy Account data: ", strategyAccountData);
 }
 
 // We recommend this pattern to be able to use async/await everywhere
