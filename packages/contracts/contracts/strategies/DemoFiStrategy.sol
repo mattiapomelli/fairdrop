@@ -3,8 +3,8 @@ pragma solidity ^0.8.9;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
-import {IStrategy} from "./IStrategy.sol";
-import {DemoFi} from "./DemoFi.sol";
+import {IStrategy} from "../interfaces/IStrategy.sol";
+import {DemoFi} from "../test/DemoFi.sol";
 
 import "hardhat/console.sol";
 

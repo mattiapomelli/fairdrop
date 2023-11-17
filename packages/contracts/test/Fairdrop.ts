@@ -20,19 +20,24 @@ describe("Fairdrop", () => {
     fairdropAddress = fairdrop.address;
 
     // Deploy TestERC20
-    const testErc20 = await viem.deployContract("TestERC20", [
-      [alice.account?.address as `0x${string}`],
-    ]);
+    const testErc20 = await viem.deployContract(
+      "contracts/test/TestERC20.sol:TestERC20",
+      [[alice.account?.address as `0x${string}`]]
+    );
     testErc20Address = testErc20.address;
 
     // Deploy DemoFi
-    const demoFi = await viem.deployContract("DemoFi", []);
+    const demoFi = await viem.deployContract(
+      "contracts/test/DemoFi.sol:DemoFi",
+      []
+    );
     demoFiAddress = demoFi.address;
 
     // Deploy DemoFiStrategy
-    const demoFiStrategy = await viem.deployContract("DemoFiStrategy", [
-      demoFiAddress,
-    ]);
+    const demoFiStrategy = await viem.deployContract(
+      "contracts/strategies/DemoFiStrategy.sol:DemoFiStrategy",
+      [demoFiAddress]
+    );
     demoFiStrategyAddress = demoFiStrategy.address;
   });
 
@@ -43,7 +48,10 @@ describe("Fairdrop", () => {
 
     before(async () => {
       const fairdrop = await viem.getContractAt("Fairdrop", fairdropAddress);
-      const testErc20 = await viem.getContractAt("TestERC20", testErc20Address);
+      const testErc20 = await viem.getContractAt(
+        "contracts/test/TestERC20.sol:TestERC20",
+        testErc20Address
+      );
       const password = toHex("password", {
         size: 32,
       });
@@ -113,7 +121,10 @@ describe("Fairdrop", () => {
     });
 
     it("should transfer the deposit amount to the contract", async () => {
-      const testErc20 = await viem.getContractAt("TestERC20", testErc20Address);
+      const testErc20 = await viem.getContractAt(
+        "contracts/test/TestERC20.sol:TestERC20",
+        testErc20Address
+      );
 
       const depositAmount = await testErc20.read.balanceOf([fairdropAddress]);
       expect(depositAmount).to.equal(depositAmount);
@@ -166,9 +177,12 @@ describe("Fairdrop", () => {
       });
 
       it("Should deposit the tokens into the protocol of the strategy", async () => {
-        const demoFi = await viem.getContractAt("DemoFi", demoFiAddress);
+        const demoFi = await viem.getContractAt(
+          "contracts/test/DemoFi.sol:DemoFi",
+          demoFiAddress
+        );
         const testErc20 = await viem.getContractAt(
-          "TestERC20",
+          "contracts/test/TestERC20.sol:TestERC20",
           testErc20Address
         );
 

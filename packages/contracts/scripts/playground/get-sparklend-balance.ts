@@ -10,17 +10,17 @@ async function main() {
 
   // Get contracts
   const sparkLendPool = await viem.getContractAt(
-    "ISparkLendPool",
+    "contracts/interfaces/ISparkLendPool.sol:ISparkLendPool",
     SPARKLEND_POOL_ADDRESS_MAINNET
   );
 
-  const fairdrop = await viem.getContractAt(
-    "Fairdrop",
-    getDeploymentAddress(network, "Fairdrop")
-  );
+  // const fairdrop = await viem.getContractAt(
+  //   "Fairdrop",
+  //   getDeploymentAddress(network, "Fairdrop")
+  // );
 
   const sparkLendStrategy = await viem.getContractAt(
-    "SparkLendStrategy",
+    "contracts/strategies/SparkLendStrategy.sol:SparkLendStrategy",
     getDeploymentAddress(network, "SparkLendStrategy")
   );
 

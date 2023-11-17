@@ -25,10 +25,13 @@ async function main() {
     network,
     hre.network.name === "devnet" ? "SparkLendStrategy" : "DemoFiStrategy"
   );
-  const strategy = await viem.getContractAt("IStrategy", strategyAddress);
+  const strategy = await viem.getContractAt(
+    "contracts/interfaces/IStrategy.sol:IStrategy",
+    strategyAddress
+  );
 
   // Approve tokens
-  const depositAmount = parseEther("5");
+  const depositAmount = parseEther("1");
   await token.write.approve([fairdrop.address, depositAmount], {
     account: alice.account,
   });

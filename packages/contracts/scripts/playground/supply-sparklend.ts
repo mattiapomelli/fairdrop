@@ -12,7 +12,7 @@ async function main() {
 
   // Get contracts
   const sparkLendPool = await viem.getContractAt(
-    "ISparkLendPool",
+    "contracts/interfaces/ISparkLendPool.sol:ISparkLendPool",
     SPARKLEND_POOL_ADDRESS_MAINNET
   );
 
