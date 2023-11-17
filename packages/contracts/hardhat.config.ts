@@ -60,6 +60,11 @@ const config: HardhatUserConfig = {
       url: "https://rpc.goerli.linea.build",
       accounts,
     },
+    devnet: {
+      url: "https://rpc.vnet.tenderly.co/devnet/devnet/3455d754-a1e0-4af3-a787-c8f1e6ff1e48",
+      chainId: 1,
+      accounts,
+    },
   },
   etherscan: {
     customChains: [

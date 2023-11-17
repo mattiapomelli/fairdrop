@@ -30,6 +30,9 @@ deploy-base:
 deploy-linea: 
 	npx hardhat deploy --network lineaTestnet --verify
 
+deploy-devnet: 
+	npx hardhat deploy --network devnet
+
 # -------------- VERIFICATION -------------- #
 
 verify-scroll: 

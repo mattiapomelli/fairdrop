@@ -9,6 +9,17 @@ task("deploy", "📰 Deploys a contract, saves the artifact and verifies it.")
   .addFlag("save", "Flag to indicate whether to save the contract or not")
   .addFlag("verify", "Flag to indicate whether to verify the contract or not")
   .setAction(async (args, { viem, run, network }) => {
+    // Get balance of dpeloyer
+    const [deployer] = await viem.getWalletClients();
+    const publicClient = await viem.getPublicClient();
+    const balance = await publicClient.getBalance({
+      address: deployer.account.address,
+    });
+
+    console.log(
+      `📡 Deploying from ${deployer.account.address} with ${balance} ETH`
+    );
+
     const Contract = await viem.deployContract(args.contract, [""]);
     console.log(
       `📰 Contract ${Contract.address} deployed to ${network.name} successfully!`
