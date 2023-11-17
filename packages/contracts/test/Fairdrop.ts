@@ -7,24 +7,39 @@ describe("Fairdrop", () => {
     alice: WalletClient,
     bob: WalletClient,
     fairdropAddress: `0x${string}`,
-    testErc20Address: `0x${string}`;
+    testErc20Address: `0x${string}`,
+    demoFiAddress: `0x${string}`,
+    demoFiStrategyAddress: `0x${string}`,
+    depositAmount = BigInt(100);
 
   before(async () => {
     [deployer, alice, bob] = await viem.getWalletClients();
 
+    // Deploy Fairdrop
     const fairdrop = await viem.deployContract("Fairdrop", []);
     fairdropAddress = fairdrop.address;
 
+    // Deploy TestERC20
     const testErc20 = await viem.deployContract("TestERC20", [
       [alice.account?.address as `0x${string}`],
     ]);
     testErc20Address = testErc20.address;
+
+    // Deploy DemoFi
+    const demoFi = await viem.deployContract("DemoFi", []);
+    demoFiAddress = demoFi.address;
+
+    // Deploy DemoFiStrategy
+    const demoFiStrategy = await viem.deployContract("DemoFiStrategy", [
+      demoFiAddress,
+    ]);
+    demoFiStrategyAddress = demoFiStrategy.address;
   });
 
   describe("Create deposit", async () => {
     let hashedPassword: `0x${string}`;
-    const amount = BigInt(100);
     let withdrawableAt: bigint;
+    let aliceBalanceBefore: bigint;
 
     before(async () => {
       const fairdrop = await viem.getContractAt("Fairdrop", fairdropAddress);
@@ -40,7 +55,7 @@ describe("Fairdrop", () => {
       withdrawableAt = BigInt(block.timestamp) + BigInt(100);
 
       // Approve tokens
-      await testErc20.write.approve([fairdropAddress, amount], {
+      await testErc20.write.approve([fairdropAddress, depositAmount], {
         account: alice.account,
       });
 
@@ -50,10 +65,21 @@ describe("Fairdrop", () => {
         fairdropAddress,
       ]);
 
-      expect(allowance).to.equal(amount);
+      expect(allowance).to.equal(depositAmount);
+
+      // Check alice balance
+      aliceBalanceBefore = await testErc20.read.balanceOf([
+        alice.account?.address as `0x${string}`,
+      ]);
 
       await fairdrop.write.createDeposit(
-        [hashedPassword, withdrawableAt, testErc20.address, amount],
+        [
+          hashedPassword,
+          withdrawableAt,
+          testErc20.address,
+          depositAmount,
+          demoFiStrategyAddress,
+        ],
         {
           account: alice.account,
         }
@@ -73,23 +99,32 @@ describe("Fairdrop", () => {
       // Check hashed password matches
       expect(deposit[1].toLowerCase()).to.equal(hashedPassword);
       // Check amount matches
-      expect(deposit[2]).to.equal(amount);
+      expect(deposit[2]).to.equal(depositAmount);
       // Check token address
       expect(deposit[3].toLowerCase()).to.equal(testErc20Address.toLowerCase());
       // Check withdrawableAt matches
-      expect(deposit[4]).to.equal(withdrawableAt);
+      expect(deposit[4].toLowerCase()).to.equal(
+        demoFiStrategyAddress.toLowerCase()
+      );
+      // Check withdrawableAt matches
+      expect(deposit[5]).to.equal(withdrawableAt);
     });
 
     it("should transfer the deposit amount to the contract", async () => {
       const testErc20 = await viem.getContractAt("TestERC20", testErc20Address);
 
       const depositAmount = await testErc20.read.balanceOf([fairdropAddress]);
-      expect(depositAmount).to.equal(amount);
+      expect(depositAmount).to.equal(depositAmount);
+
+      const aliceBalance = await testErc20.read.balanceOf([
+        alice.account?.address as `0x${string}`,
+      ]);
+      const expectedAliceBalance = aliceBalanceBefore - depositAmount;
+      expect(aliceBalance).to.equal(expectedAliceBalance);
     });
   });
 
   describe("Claim deposit", async () => {
-    const amount = BigInt(100);
     const depositId = BigInt(0);
 
     it("fails if deposit doesn't exist", async () => {
@@ -128,7 +163,21 @@ describe("Fairdrop", () => {
         });
       });
 
-      it("should create a deposit", async () => {});
+      it("Should deposit the tokens into the strategy protocol", async () => {
+        const demoFiStrategy = await viem.getContractAt(
+          "DemoFiStrategy",
+          demoFiStrategyAddress
+        );
+        const demoFi = await viem.getContractAt("DemoFi", demoFiAddress);
+        const testErc20 = await viem.getContractAt(
+          "TestERC20",
+          testErc20Address
+        );
+
+        // Check tokens were transferred to DemoFi
+        const demoFiBalance = await testErc20.read.balanceOf([demoFi.address]);
+        expect(demoFiBalance).to.equal(depositAmount);
+      });
     });
   });
 });
