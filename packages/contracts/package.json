@@ -37,6 +37,7 @@
   "author": "ahmedhamedaly",
   "license": "MIT",
   "dependencies": {
+    "@openzeppelin/contracts": "^5.0.0",
     "ipfs-http-client": "^56.0.0"
   }
 }
