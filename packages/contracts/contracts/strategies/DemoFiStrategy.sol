@@ -4,15 +4,17 @@ pragma solidity ^0.8.9;
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
 import {IStrategy} from "../interfaces/IStrategy.sol";
-import {DemoFi} from "../test/DemoFi.sol";
+import {DemoFiPool} from "../test/DemoFiPool.sol";
 
 import "hardhat/console.sol";
 
 contract DemoFiStrategy is IStrategy {
-    DemoFi private demoFi;
+    DemoFiPool private pool;
+    address private fairdropAddress;
 
-    constructor(address _demoFi) {
-        demoFi = DemoFi(_demoFi);
+    constructor(address _fairdropAddress, address _pool) {
+        fairdropAddress = _fairdropAddress;
+        pool = DemoFiPool(_pool);
     }
 
     function supply(address token, uint256 amount) external {
@@ -20,12 +22,10 @@ contract DemoFiStrategy is IStrategy {
         IERC20(token).transferFrom(msg.sender, address(this), amount);
 
         // Approve DemoFi pool to spend any amount of tokens
-        if (IERC20(token).allowance(address(this), address(demoFi)) < amount) {
-            IERC20(token).approve(address(demoFi), type(uint256).max);
+        if (IERC20(token).allowance(address(this), address(pool)) < amount) {
+            IERC20(token).approve(address(pool), type(uint256).max);
         }
 
-        demoFi.supply(token, amount);
-
-        // TODO: transfer liquidity tokens to msg.sender
+        pool.supply(token, amount, fairdropAddress, 0);
     }
 }

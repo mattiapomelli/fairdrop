@@ -4,17 +4,17 @@ pragma solidity ^0.8.9;
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
 import {IStrategy} from "../interfaces/IStrategy.sol";
-import {ISparkLendPool} from "../interfaces/ISparkLendPool.sol";
+import {IPool} from "../interfaces/IPool.sol";
 
 import "hardhat/console.sol";
 
 contract SparkLendStrategy is IStrategy {
-    ISparkLendPool private pool;
+    IPool private pool;
     address private fairdropAddress;
 
     constructor(address _fairdropAddress, address _pool) {
         fairdropAddress = _fairdropAddress;
-        pool = ISparkLendPool(_pool);
+        pool = IPool(_pool);
     }
 
     function supply(address token, uint256 amount) external {

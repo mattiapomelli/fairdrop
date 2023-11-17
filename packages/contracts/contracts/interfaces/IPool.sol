@@ -2,9 +2,9 @@
 pragma solidity ^0.8.9;
 
 /**
- * @title ISparkLendPool
+ * @title IPool
  */
-interface ISparkLendPool {
+interface IPool {
     /**
      * @notice Supplies an `amount` of underlying asset into the reserve, receiving in return overlying aTokens.
      * - E.g. User supplies 100 USDC and gets in return 100 aUSDC

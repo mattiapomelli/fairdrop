@@ -28,7 +28,7 @@ describe("Fairdrop", () => {
 
     // Deploy DemoFi
     const demoFi = await viem.deployContract(
-      "contracts/test/DemoFi.sol:DemoFi",
+      "contracts/test/DemoFiPool.sol:DemoFiPool",
       []
     );
     demoFiAddress = demoFi.address;
@@ -36,7 +36,7 @@ describe("Fairdrop", () => {
     // Deploy DemoFiStrategy
     const demoFiStrategy = await viem.deployContract(
       "contracts/strategies/DemoFiStrategy.sol:DemoFiStrategy",
-      [demoFiAddress]
+      [fairdrop.address, demoFiAddress]
     );
     demoFiStrategyAddress = demoFiStrategy.address;
   });
@@ -178,7 +178,7 @@ describe("Fairdrop", () => {
 
       it("Should deposit the tokens into the protocol of the strategy", async () => {
         const demoFi = await viem.getContractAt(
-          "contracts/test/DemoFi.sol:DemoFi",
+          "contracts/test/DemoFiPool.sol:DemoFiPool",
           demoFiAddress
         );
         const testErc20 = await viem.getContractAt(

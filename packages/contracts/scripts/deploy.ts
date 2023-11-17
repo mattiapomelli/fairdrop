@@ -110,7 +110,7 @@ task(
       // Deploy DemoFiStrategy
       const demoFiStrategy = await viem.deployContract(
         "contracts/strategies/DemoFiStrategy.sol:DemoFiStrategy",
-        [demoFi.address]
+        [fairdrop.address, demoFi.address]
       );
       console.log(
         `📰 Contract DemoFiStrategy deployed to ${network.name} at ${demoFiStrategy.address}`
