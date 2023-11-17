@@ -3,6 +3,8 @@ import { save } from "./utils/save";
 import { verify } from "./utils/verify";
 
 import { setDeploymentAddress } from "../deployment/deployment-manager";
+import { SPARKLEND_POOL_ADDRESS_MAINNET } from "../utils/constants";
+import { Abi } from "viem";
 
 task(
   "deploy",
@@ -27,7 +29,7 @@ task(
     // Deploy Fairdrop
     const fairdrop = await viem.deployContract("Fairdrop", []);
     console.log(
-      `📰 Contract ${fairdrop.address} deployed to ${network.name} successfully!`
+      `📰 Contract Fairdrop deployed to ${network.name} at ${fairdrop.address}`
     );
 
     setDeploymentAddress(network.name, "Fairdrop", fairdrop.address);
@@ -38,61 +40,90 @@ task(
       await verify(run, fairdrop.address, [""]);
     }
 
-    // Deploy TestERC20
-    const testErc20 = await viem.deployContract("TestERC20", [
-      [
-        deployer.account?.address as `0x${string}`,
-        alice.account?.address as `0x${string}`,
-      ],
-    ]);
-    console.log(
-      `📰 Contract ${testErc20.address} deployed to ${network.name} successfully!`
-    );
-
-    setDeploymentAddress(network.name, "TestERC20", testErc20.address);
-    if (args.save) {
-      await save(chainId, args.contract, testErc20.address, testErc20.abi);
-    }
-    if (args.verify) {
-      await verify(run, testErc20.address, [""]);
-    }
-
-    // Deploy DemoFi
-    const demoFi = await viem.deployContract("DemoFi", []);
-    console.log(
-      `📰 Contract ${demoFi.address} deployed to ${network.name} successfully!`
-    );
-
-    setDeploymentAddress(network.name, "DemoFi", demoFi.address);
-    if (args.save) {
-      await save(chainId, args.contract, demoFi.address, demoFi.abi);
-    }
-    if (args.verify) {
-      await verify(run, demoFi.address, [""]);
-    }
-
-    // Deploy DemoFiStrategy
-    const demoFiStrategy = await viem.deployContract("DemoFiStrategy", [
-      demoFi.address,
-    ]);
-    console.log(
-      `📰 Contract ${demoFiStrategy.address} deployed to ${network.name} successfully!`
-    );
-
-    setDeploymentAddress(
-      network.name,
-      "DemoFiStrategy",
-      demoFiStrategy.address
-    );
-    if (args.save) {
-      await save(
-        chainId,
-        args.contract,
-        demoFiStrategy.address,
-        demoFiStrategy.abi
+    if (network.name !== "devnet") {
+      // Deploy TestERC20
+      const testErc20 = await viem.deployContract("TestERC20", [
+        [
+          deployer.account?.address as `0x${string}`,
+          alice.account?.address as `0x${string}`,
+        ],
+      ]);
+      console.log(
+        `📰 Contract TestERC20 deployed to ${network.name} at ${testErc20.address}`
       );
+
+      setDeploymentAddress(network.name, "TestERC20", testErc20.address);
+      if (args.save) {
+        await save(chainId, args.contract, testErc20.address, testErc20.abi);
+      }
+      if (args.verify) {
+        await verify(run, testErc20.address, [""]);
+      }
     }
-    if (args.verify) {
-      await verify(run, demoFiStrategy.address, [""]);
+
+    if (network.name === "devnet") {
+      // Deploy SparkLendStrategy
+      const sparkLendStrategy = await viem.deployContract("SparkLendStrategy", [
+        SPARKLEND_POOL_ADDRESS_MAINNET,
+      ]);
+      console.log(
+        `📰 Contract SparkLendStrategy deployed to ${network.name} at ${sparkLendStrategy.address}`
+      );
+
+      setDeploymentAddress(
+        network.name,
+        "SparkLendStrategy",
+        sparkLendStrategy.address
+      );
+      if (args.save) {
+        await save(
+          chainId,
+          args.contract,
+          sparkLendStrategy.address,
+          sparkLendStrategy.abi
+        );
+      }
+      if (args.verify) {
+        await verify(run, sparkLendStrategy.address, [""]);
+      }
+    } else {
+      // Deploy DemoFi
+      const demoFi = await viem.deployContract("DemoFi", []);
+      console.log(
+        `📰 Contract DemoFi deployed to ${network.name} at ${demoFi.address}`
+      );
+
+      setDeploymentAddress(network.name, "DemoFi", demoFi.address);
+      if (args.save) {
+        await save(chainId, args.contract, demoFi.address, demoFi.abi);
+      }
+      if (args.verify) {
+        await verify(run, demoFi.address, [""]);
+      }
+
+      // Deploy DemoFiStrategy
+      const demoFiStrategy = await viem.deployContract("DemoFiStrategy", [
+        demoFi.address,
+      ]);
+      console.log(
+        `📰 Contract DemoFiStrategy deployed to ${network.name} at ${demoFiStrategy.address}`
+      );
+
+      setDeploymentAddress(
+        network.name,
+        "DemoFiStrategy",
+        demoFiStrategy.address
+      );
+      if (args.save) {
+        await save(
+          chainId,
+          args.contract,
+          demoFiStrategy.address,
+          demoFiStrategy.abi
+        );
+      }
+      if (args.verify) {
+        await verify(run, demoFiStrategy.address, [""]);
+      }
     }
   });
