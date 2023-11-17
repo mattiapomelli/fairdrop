@@ -1,6 +1,11 @@
 import { loadJSON, saveJSON } from "../utils/files";
 
-export const CONTRACT_NAMES = ["Storage"] as const;
+export const CONTRACT_NAMES = [
+  "Fairdrop",
+  "DemoFi",
+  "TestERC20",
+  "DemoFiStrategy",
+] as const;
 
 export type ContractName = (typeof CONTRACT_NAMES)[number];
 
