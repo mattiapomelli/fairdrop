@@ -30,7 +30,7 @@ async function main() {
   );
 
   // Approve tokens
-  const depositAmount = parseEther("1");
+  const depositAmount = parseEther("0.1");
   await token.write.approve([fairdrop.address, depositAmount], {
     account: alice.account,
   });
@@ -42,7 +42,8 @@ async function main() {
   const hashedPassword = keccak256(password);
   const publicClient = await viem.getPublicClient();
   const block = await publicClient.getBlock();
-  const withdrawableAt = BigInt(block.timestamp) + BigInt(100);
+  // const withdrawableAt = BigInt(block.timestamp) + BigInt(100);
+  const withdrawableAt = BigInt(block.timestamp);
 
   await fairdrop.write.createDeposit(
     [

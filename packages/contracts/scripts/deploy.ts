@@ -95,7 +95,7 @@ task(
     } else {
       // Deploy DemoFi
       const demoFi = await viem.deployContract(
-        "contracts/test/DemoFi.sol:DemoFi",
+        "contracts/test/DemoFiPool.sol:DemoFiPool",
         []
       );
       console.log(

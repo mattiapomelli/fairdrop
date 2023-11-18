@@ -310,7 +310,7 @@ describe("Fairdrop", () => {
         expect(bobBalance).to.equal(depositAmount);
       });
 
-      it("Should burn the yielf token from faidrop contract and srategy contract", async () => {
+      it("Should burn the yield token from faidrop contract and srategy contract", async () => {
         const demoFiPool = await viem.getContractAt(
           "contracts/test/DemoFiPool.sol:DemoFiPool",
           demoFiPoolAddress

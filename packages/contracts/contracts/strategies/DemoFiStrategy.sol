@@ -21,9 +21,9 @@ contract DemoFiStrategy is IStrategy {
         // Send tokens to this contract
         IERC20(asset).transferFrom(msg.sender, address(this), amount);
 
-        // Approve DemoFi pool to spend any amount of tokens
+        // Approve DemoFi pool to spend tokens
         if (IERC20(asset).allowance(address(this), address(pool)) < amount) {
-            IERC20(asset).approve(address(pool), type(uint256).max);
+            IERC20(asset).approve(address(pool), amount);
         }
 
         pool.supply(asset, amount, fairdropAddress, 0);

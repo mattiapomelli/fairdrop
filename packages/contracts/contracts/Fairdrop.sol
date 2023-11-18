@@ -122,7 +122,7 @@ contract Fairdrop {
 
         IStrategy strategy = deposit.strategy;
 
-        // Approve strategy to use yieldToken (needed for claim)
+        // Approve strategy to use yieldToken (needed for withdraw)
         address yieldToken = strategy.getYieldAssetFromUnderlying(
             deposit.tokenAddress
         );

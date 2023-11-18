@@ -95,6 +95,23 @@ contract DemoFiPool is IPool {
     function getReserveData(
         address
     ) external view returns (IPool.ReserveData memory) {
-        return IPool.ReserveData({aTokenAddress: address(poolShareToken)});
+        return
+            IPool.ReserveData({
+                configuration: ReserveConfigurationMap({data: 0}),
+                liquidityIndex: 0,
+                currentLiquidityRate: 0,
+                variableBorrowIndex: 0,
+                currentVariableBorrowRate: 0,
+                currentStableBorrowRate: 0,
+                lastUpdateTimestamp: 0,
+                id: 0,
+                aTokenAddress: address(poolShareToken),
+                stableDebtTokenAddress: address(0),
+                variableDebtTokenAddress: address(0),
+                interestRateStrategyAddress: address(0),
+                accruedToTreasury: 0,
+                unbacked: 0,
+                isolationModeTotalDebt: 0
+            });
     }
 }

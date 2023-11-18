@@ -1,7 +1,7 @@
 {
-  "Fairdrop": "0xd751f9f4ecc8d543967cac3c2367c038af3a92eb",
+  "Fairdrop": "0x40eed878c6125160ab8c4c931fcfd083d0511af1",
   "TestERC20": "0xe393fb46c545aad9dc4f37b6d149d3401863bac5",
   "DemoFi": "0x58f7fc8d443507b9a14a0fe33330f07c85b474e9",
   "DemoFiStrategy": "0x470c9a0dedb21c08fea4a67e7ef09780dc071f5a",
-  "SparkLendStrategy": "0xa7f9d8792c963f19cb1c68008190f760aff87d00"
+  "SparkLendStrategy": "0x1e21e9bb2bf3eb0d4b2cfbd1e8cc0653f42b8532"
 }

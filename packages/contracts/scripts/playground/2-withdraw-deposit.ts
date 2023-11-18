@@ -1,7 +1,6 @@
 import hre, { viem } from "hardhat";
 import { getDeploymentAddress } from "../../deployment/deployment-manager";
 import { keccak256, toHex } from "viem";
-import { DAI_ADDRESS, networkHasSparkLend } from "../../utils/constants";
 
 async function main() {
   const [deployer, alice, bob] = await viem.getWalletClients();
@@ -17,14 +16,11 @@ async function main() {
 
   // Claim deposit
   const depositId = BigInt(0);
-  const password = toHex("password", {
-    size: 32,
-  });
-  await fairdrop.write.claimDeposit([depositId, password], {
+  await fairdrop.write.withdrawDeposit([depositId], {
     account: bob.account,
   });
 
-  console.log("Claimed deposit");
+  console.log("Withdrawn deposit");
 }
 
 // We recommend this pattern to be able to use async/await everywhere

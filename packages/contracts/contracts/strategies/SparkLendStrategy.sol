@@ -21,9 +21,9 @@ contract SparkLendStrategy is IStrategy {
         // Send tokens to this contract
         IERC20(asset).transferFrom(msg.sender, address(this), amount);
 
-        // Approve SparkLend pool to spend any amount of tokens
+        // Approve SparkLend pool to spend tokens
         if (IERC20(asset).allowance(address(this), address(pool)) < amount) {
-            IERC20(asset).approve(address(pool), type(uint256).max);
+            IERC20(asset).approve(address(pool), amount);
         }
 
         pool.supply(asset, amount, fairdropAddress, 0);
@@ -36,6 +36,8 @@ contract SparkLendStrategy is IStrategy {
     ) external returns (uint256) {
         // Get aTokens from sender
         IERC20 aToken = IERC20(getYieldAssetFromUnderlying(asset));
+
+        // uint balance = aToken.balanceOf(msg.sender);
         aToken.transferFrom(msg.sender, address(this), amount);
 
         uint256 withdrawnAmount = pool.withdraw(asset, amount, to);

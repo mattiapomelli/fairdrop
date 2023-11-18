@@ -4,6 +4,9 @@ include .env
 # -------------- DEPLOYMENT -------------- #
 
 deploy: 
+	npx hardhat deploy --network $(NETWORK)
+
+deploy-localhost: 
 	npx hardhat deploy --network localhost
 
 deploy-mumbai:
@@ -49,8 +52,15 @@ create-deposit:
 claim-deposit:
 	npx hardhat run scripts/playground/1-claim-deposit.ts --network $(NETWORK)
 
+withdraw-deposit:
+	npx hardhat run scripts/playground/2-withdraw-deposit.ts --network $(NETWORK)
+
 supply-sparklend:
 	npx hardhat run scripts/playground/supply-sparklend.ts --network $(NETWORK)
 
 get-sparklend-balance:
 	npx hardhat run scripts/playground/get-sparklend-balance.ts --network $(NETWORK)
+
+#-------------- SETUP ----------------#
+
+setup: deploy create-deposit claim-deposit withdraw-deposit get-sparklend-balance --network $(NETWORK)
