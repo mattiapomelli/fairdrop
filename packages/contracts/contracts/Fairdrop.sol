@@ -108,12 +108,15 @@ contract Fairdrop {
         emit DepositClaimed(_depositId, msg.sender, deposit.amount);
     }
 
-    function withdrawDeposit(uint256 _depositId) public {
+    function withdrawDeposit(uint256 _depositId, uint256 _amount) public {
         // Check that the deposit exists and that it isn't already claimed
         require(_depositId < deposits.length, "Deposit doesn't exist");
         Deposit storage deposit = deposits[_depositId];
 
         require(deposit.claimed, "Deposit must be claimed before withdrawal");
+        require(deposit.amount >= _amount, "Not enough funds");
+
+        deposit.amount -= _amount;
 
         require(
             block.timestamp >= deposit.withdrawableAt,
@@ -126,10 +129,10 @@ contract Fairdrop {
         address yieldToken = strategy.getYieldAssetFromUnderlying(
             deposit.tokenAddress
         );
-        IERC20(yieldToken).approve(address(strategy), deposit.amount);
+        IERC20(yieldToken).approve(address(strategy), _amount);
 
-        strategy.withdraw(deposit.tokenAddress, deposit.amount, msg.sender);
+        strategy.withdraw(deposit.tokenAddress, _amount, msg.sender);
 
-        emit DepositClaimed(_depositId, msg.sender, deposit.amount);
+        emit DepositClaimed(_depositId, msg.sender, _amount);
     }
 }

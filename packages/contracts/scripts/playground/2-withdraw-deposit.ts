@@ -1,6 +1,6 @@
 import hre, { viem } from "hardhat";
 import { getDeploymentAddress } from "../../deployment/deployment-manager";
-import { keccak256, toHex } from "viem";
+import { parseEther } from "viem";
 
 async function main() {
   const [deployer, alice, bob] = await viem.getWalletClients();
@@ -16,7 +16,8 @@ async function main() {
 
   // Claim deposit
   const depositId = BigInt(0);
-  await fairdrop.write.withdrawDeposit([depositId], {
+  const withdrawAmount = parseEther("0.04");
+  await fairdrop.write.withdrawDeposit([depositId, withdrawAmount], {
     account: bob.account,
   });
 
