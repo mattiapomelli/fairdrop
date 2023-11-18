@@ -17,7 +17,7 @@ contract DemoFiStrategy is IStrategy {
         pool = DemoFiPool(_pool);
     }
 
-    function supply(address asset, uint256 amount, address) external {
+    function supply(address asset, uint256 amount) external {
         // Send tokens to this contract
         IERC20(asset).transferFrom(msg.sender, address(this), amount);
 
@@ -46,5 +46,9 @@ contract DemoFiStrategy is IStrategy {
         address asset
     ) public view returns (address) {
         return pool.getReserveData(asset).aTokenAddress;
+    }
+
+    function isEligible(address) external pure returns (bool) {
+        return true;
     }
 }

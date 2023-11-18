@@ -16,7 +16,7 @@ contract SparkLendStrategy is IStrategy, AxiomV2Client, Ownable {
     address private fairdropAddress;
 
     // Whether users have to prove they have interacted with the SparkLend pool to claim the airdrop
-    bool public verificationEnabled;
+    // bool public verificationEnabled;
 
     // =========================== Axiom ==============================
 
@@ -37,26 +37,26 @@ contract SparkLendStrategy is IStrategy, AxiomV2Client, Ownable {
         address _pool,
         address _axiomV2QueryAddress,
         uint64 _callbackSourceChainId,
-        bytes32 _axiomCallbackQuerySchema,
-        bool _verificationEnabled
+        bytes32 _axiomCallbackQuerySchema
     ) AxiomV2Client(_axiomV2QueryAddress) Ownable(msg.sender) {
+        // bool _verificationEnabled
         fairdropAddress = _fairdropAddress;
         pool = IPool(_pool);
         callbackSourceChainId = _callbackSourceChainId;
         axiomCallbackQuerySchema = _axiomCallbackQuerySchema;
-        verificationEnabled = _verificationEnabled;
+        // verificationEnabled = _verificationEnabled;
     }
 
     // =========================== Strategy Functions ==============================
 
-    function supply(address asset, uint256 amount, address user) external {
+    function supply(address asset, uint256 amount) external {
         // Check if user is verified
-        if (verificationEnabled) {
-            require(
-                isVerified[user],
-                "SparkLendStrategy: User is not verified"
-            );
-        }
+        // if (verificationEnabled) {
+        //     require(
+        //         isVerified[user],
+        //         "SparkLendStrategy: User is not verified"
+        //     );
+        // }
 
         // Send tokens to this contract
         IERC20(asset).transferFrom(msg.sender, address(this), amount);
@@ -90,13 +90,17 @@ contract SparkLendStrategy is IStrategy, AxiomV2Client, Ownable {
         return pool.getReserveData(asset).aTokenAddress;
     }
 
+    function isEligible(address user) external view returns (bool) {
+        return isVerified[user];
+    }
+
     // =========================== Owner functions ==============================
 
-    function setVerificationEnabled(
-        bool _verificationEnabled
-    ) external onlyOwner {
-        verificationEnabled = _verificationEnabled;
-    }
+    // function setVerificationEnabled(
+    //     bool _verificationEnabled
+    // ) external onlyOwner {
+    //     verificationEnabled = _verificationEnabled;
+    // }
 
     // =========================== Axiom functions ==============================
 

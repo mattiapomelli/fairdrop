@@ -17,6 +17,7 @@ contract Fairdrop is ERC721 {
         IStrategy strategy;
         uint256 withdrawableAt;
         bool claimed;
+        bool checkEligibility; // Whether to check eligibility to claim the deposit or anyone can claim it
     }
 
     Deposit[] public deposits;
@@ -53,7 +54,8 @@ contract Fairdrop is ERC721 {
         uint256 _withdrawableAt,
         address _tokenAddress,
         uint256 _tokenAmount,
-        IStrategy _strategy
+        IStrategy _strategy,
+        bool _checkEligibility
     ) public payable returns (uint256) {
         if (_tokenAddress != address(0)) {
             require(msg.value == 0, "Cannot deposit both ETH and ERC20 token");
@@ -75,7 +77,8 @@ contract Fairdrop is ERC721 {
                 tokenAddress: _tokenAddress,
                 withdrawableAt: _withdrawableAt,
                 strategy: _strategy,
-                claimed: false
+                claimed: false,
+                checkEligibility: _checkEligibility
             })
         );
         uint256 depositId = deposits.length - 1;
@@ -104,11 +107,17 @@ contract Fairdrop is ERC721 {
         );
 
         IStrategy strategy = deposit.strategy;
+
+        // Check user is eligible to claim the deposit
+        if (deposit.checkEligibility) {
+            require(strategy.isEligible(msg.sender), "User not eligible");
+        }
+
         IERC20 token = IERC20(deposit.tokenAddress);
 
         // Approve strategy to use tokens
         token.approve(address(strategy), deposit.amount);
-        strategy.supply(address(token), deposit.amount, msg.sender);
+        strategy.supply(address(token), deposit.amount);
 
         // Mint NFT to sender
         _safeMint(msg.sender, _depositId);

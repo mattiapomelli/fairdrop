@@ -60,6 +60,7 @@ async function main() {
   const block = await publicClient.getBlock();
   // const withdrawableAt = BigInt(block.timestamp) + BigInt(100);
   const withdrawableAt = BigInt(block.timestamp);
+  const checkElibility = false;
 
   const txHash2 = await fairdrop.write.createDeposit(
     [
@@ -68,6 +69,7 @@ async function main() {
       token.address,
       depositAmount,
       strategy.address,
+      checkElibility,
     ],
     {
       account: alice.account,

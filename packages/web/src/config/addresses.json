@@ -3,7 +3,7 @@
     "31337": "0xc1ee53801a6350311a5942da3084ad500ca30620"
   },
   "Fairdrop": {
-    "5": "0x6248dbef991b7c098323508d3684a7bb10992456",
+    "5": "0x2832705d0828154339deb868ae71347c1850c244",
     "31337": "0x58f7fc8d443507b9a14a0fe33330f07c85b474e9"
   },
   "TestERC20": {
@@ -16,7 +16,7 @@
     "31337": "0x584b9958b653e313b9b90f2bc214567cc37a3da0"
   },
   "SparkLendStrategy": {
-    "5": "0x400223e9d17be2e4546eeff2f1f892d5f0d758d0"
+    "5": "0x46c67948cfb8f392066d7a1c851c701a2acbcca2"
   },
   "SparkLendPool": {
     "5": "0x26ca51Af4506DE7a6f0785D20CD776081a05fF6d"

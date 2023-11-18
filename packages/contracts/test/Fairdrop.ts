@@ -102,6 +102,7 @@ describe("Fairdrop", () => {
           testErc20.address,
           depositAmount,
           demoFiStrategyAddress,
+          false,
         ],
         {
           account: alice.account,

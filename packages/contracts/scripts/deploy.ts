@@ -70,7 +70,6 @@ task(
 
     if (networkHasSparkLend(network.name)) {
       // console.log("Axiom V2 query address: ", AXIOM_V2_QUERY_ADDRESS[chainId]);
-      const isVerificationEnabled = true;
 
       // Deploy SparkLendStrategy
       const sparkLendStrategy = await viem.deployContract(
@@ -81,11 +80,10 @@ task(
           AXIOM_V2_QUERY_ADDRESS[chainId],
           BigInt(chainId),
           AXIOM_CALLBACK_QUERY_SCHEMA,
-          isVerificationEnabled,
         ],
         {
           // Set high gas price for deployment
-          gasPrice: BigInt(100000000000),
+          // gasPrice: BigInt(100000000000), // For Goerli because it's freaking slow
         }
       );
       console.log(

@@ -1,7 +1,6 @@
 import hre, { viem } from "hardhat";
 import { getDeploymentAddress } from "../../deployment/deployment-manager";
-import { keccak256, toHex } from "viem";
-import { DAI_ADDRESS, networkHasSparkLend } from "../../utils/constants";
+import { toHex } from "viem";
 
 async function main() {
   const [deployer, alice, bob] = await viem.getWalletClients();

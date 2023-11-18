@@ -61,7 +61,7 @@ const config: HardhatUserConfig = {
       accounts,
     },
     devnet: {
-      url: "https://rpc.vnet.tenderly.co/devnet/devnet/125c87d7-fa9c-4f43-ac45-70c41ff02949",
+      url: "https://rpc.vnet.tenderly.co/devnet/devnet/2394d58f-3ed4-47b8-84a7-4b59d275de8e",
       chainId: 1,
       accounts,
     },

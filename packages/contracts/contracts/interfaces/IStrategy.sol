@@ -6,9 +6,8 @@ interface IStrategy {
      * @dev Supply to the protocol managed by the strategy
      * @param asset The address of the underlying asset to supply
      * @param amount The amount to be supplied
-     * @param user The address of the user
      */
-    function supply(address asset, uint256 amount, address user) external;
+    function supply(address asset, uint256 amount) external;
 
     /**
      * @dev Withdraw from the protocol managed by the strategy
@@ -29,4 +28,9 @@ interface IStrategy {
     function getYieldAssetFromUnderlying(
         address asset
     ) external view returns (address);
+
+    /**
+     * @dev Returns whether the user is verified to claim the airdrop
+     */
+    function isEligible(address user) external view returns (bool);
 }
