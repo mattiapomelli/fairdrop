@@ -13,7 +13,7 @@ async function main() {
 
   // Get contracts
   const worldcoin = await viem.getContractAt(
-    "Fairdrop",
+    "contracts/test/Worldcoin.sol:Contract",
     getDeploymentAddress(network, "Worldcoin")
   );
 

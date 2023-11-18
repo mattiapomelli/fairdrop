@@ -66,11 +66,11 @@ contract Fairdrop is ERC721 {
      * @param _actionId The World ID action ID
      */
     constructor(
-        address _worldId,
+        IWorldID _worldId,
         string memory _appId,
         string memory _actionId
     ) ERC721("Fairdrop", "FAR") {
-        worldId = IWorldID(_worldId);
+        worldId = _worldId;
         externalNullifier = abi
             .encodePacked(abi.encodePacked(_appId).hashToField(), _actionId)
             .hashToField();
@@ -158,9 +158,9 @@ contract Fairdrop is ERC721 {
         IStrategy strategy = deposit.strategy;
 
         // Check if user is verified with WorldId
-        // if (deposit.worldIdVerification && address(worldId) != address(0)) {
-        //     _verifyWorldId(signal, root, nullifierHash, proof);
-        // }
+        if (deposit.worldIdVerification && address(worldId) != address(0)) {
+            _verifyWorldId(signal, root, nullifierHash, proof);
+        }
 
         // Check user is eligible to claim the deposit
         if (deposit.checkEligibility) {
@@ -210,26 +210,28 @@ contract Fairdrop is ERC721 {
         emit DepositClaimed(_depositId, msg.sender, _amount);
     }
 
-    // function testWorldcoin(
-    //     address signal,
-    //     uint256 root,
-    //     uint256 nullifierHash,
-    //     uint256[8] calldata proof
-    // ) public {
-    //     _verifyWorldId(signal, root, nullifierHash, proof);
-    // }
+    function testWorldcoin(
+        address signal,
+        uint256 root,
+        uint256 nullifierHash,
+        uint256[8] calldata proof
+    ) public {
+        _verifyWorldId(signal, root, nullifierHash, proof);
+    }
+
+    // =========================== Internal functions ==============================
 
     /// @param signal An arbitrary input from the user, usually the user's wallet address (check README for further details)
     /// @param root The root of the Merkle tree (returned by the JS widget).
     /// @param nullifierHash The nullifier hash for this proof, preventing double signaling (returned by the JS widget).
     /// @param proof The zero-knowledge proof that demonstrates the claimer is registered with World ID (returned by the JS widget).
     /// @dev Feel free to rename this method however you want! We've used `claim`, `verify` or `execute` in the past.
-    function verifyAndExecute(
+    function _verifyWorldId(
         address signal,
         uint256 root,
         uint256 nullifierHash,
         uint256[8] calldata proof
-    ) public {
+    ) internal {
         // First, we make sure this person hasn't done this before
         if (nullifierHashes[nullifierHash]) revert InvalidNullifier();
 
@@ -248,43 +250,5 @@ contract Fairdrop is ERC721 {
 
         // Finally, execute your logic here, for example issue a token, NFT, etc...
         // Make sure to emit some kind of event afterwards!
-    }
-
-    // =========================== Internal functions ==============================
-
-    // /**
-    //  * @dev Verify if the user is verified by World ID
-    //  * @param signal An arbitrary input from the user that cannot be tampered with. In this case, it is the user's wallet address.
-    //  * @param root The root (returned by the IDKit widget).
-    //  * @param nullifierHash The nullifier hash for this proof, preventing double signaling (returned by the IDKit widget).
-    //  * @param proof The zero-knowledge proof that demonstrates the claimer is registered with World ID (returned by the IDKit widget).
-    //  */
-    // function _verifyWorldId(
-    //     address signal,
-    //     uint256 root,
-    //     uint256 nullifierHash,
-    //     uint256[8] calldata proof
-    // ) public {
-    //     // First, we make sure this person hasn't done this before
-    //     if (nullifierHashes[nullifierHash]) revert InvalidNullifier();
-
-    //     // We now verify the provided proof is valid and the user is verified by World ID
-    //     worldId.verifyProof(
-    //         root,
-    //         groupId, // set to "1" in the constructor
-    //         hashToField(abi.encodePacked(signal)),
-    //         nullifierHash,
-    //         externalNullifierHash,
-    //         proof
-    //     );
-
-    //     // We now record the user has done this, so they can't do it again (sybil-resistance)
-    //     nullifierHashes[nullifierHash] = true;
-    // }
-
-    // =========================== View functions ==============================
-
-    function hashToField(bytes memory value) internal pure returns (uint256) {
-        return uint256(keccak256(abi.encodePacked(value))) >> 8;
     }
 }

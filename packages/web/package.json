@@ -37,7 +37,6 @@
     "class-variance-authority": "^0.6.1",
     "clsx": "^1.2.1",
     "cmdk": "^0.2.0",
-    "ethers": "v5",
     "lucide-react": "^0.292.0",
     "next": "14.0.0",
     "next-pwa": "^5.6.0",

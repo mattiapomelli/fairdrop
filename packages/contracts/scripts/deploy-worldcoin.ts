@@ -40,7 +40,7 @@ task("deploy-worldcoin", "📰 Deploy example Worldcoin verification contract")
     console.log("worldcoinActionId: ", worldcoinActionId);
 
     const worldcoin = await viem.deployContract(
-      "contracts/Worldcoin.sol:Contract",
+      "contracts/test/Worldcoin.sol:Contract",
       [worldIdRouterAddress, worldcoinAppId, worldcoinActionId]
     );
     console.log(

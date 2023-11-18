@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.9;
 
-import {ByteHasher} from "./libraries/ByteHasher.sol";
-import {IWorldID} from "./interfaces/IWorldID.sol";
+import {ByteHasher} from "../libraries/ByteHasher.sol";
+import {IWorldID} from "../interfaces/IWorldID.sol";
 
 contract Contract {
     using ByteHasher for bytes;
