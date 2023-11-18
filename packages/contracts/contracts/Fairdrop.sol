@@ -120,7 +120,7 @@ contract Fairdrop is ERC721 {
                 "Failed to transfer ERC20 token"
             );
         } else {
-            require(msg.value > 0, "No ETH sent");
+            require(msg.value > 0, "No ETH sent"); // TODO: Handle ETH deposits
             _tokenAmount = msg.value;
         }
 

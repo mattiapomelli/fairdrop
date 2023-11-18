@@ -142,12 +142,10 @@ task(
       }
 
       // Deploy DemoFiStrategy
-      console.log("Here");
       const demoFiStrategy = await viem.deployContract(
         "contracts/strategies/DemoFiStrategy.sol:DemoFiStrategy",
         [fairdrop.address, demoFi.address]
       );
-      console.log("Here 2");
       console.log(
         `📰 Contract DemoFiStrategy deployed to ${network.name} at ${demoFiStrategy.address}`
       );
