@@ -4,6 +4,7 @@ import { parseEther } from "viem";
 
 async function main() {
   const [deployer, alice, bob] = await viem.getWalletClients();
+  const publicClient = await viem.getPublicClient();
 
   const network = hre.network.name;
   console.log("Network:", network);
@@ -16,9 +17,20 @@ async function main() {
 
   // Claim deposit
   const depositId = BigInt(0);
+  // const deposit = await fairdrop.read.deposits([depositId]);
+  // console.log("Deposit: ", deposit);
+
   const withdrawAmount = parseEther("0.04");
-  await fairdrop.write.withdrawDeposit([depositId, withdrawAmount], {
-    account: bob.account,
+  const txHash = await fairdrop.write.withdrawDeposit(
+    [depositId, withdrawAmount],
+    {
+      account: bob.account,
+    }
+  );
+
+  // Wait for confirmation
+  await publicClient.waitForTransactionReceipt({
+    hash: txHash,
   });
 
   console.log("Withdrawn deposit");

@@ -5,6 +5,7 @@ import { DAI_ADDRESS, networkHasSparkLend } from "../../utils/constants";
 
 async function main() {
   const [deployer, alice, bob] = await viem.getWalletClients();
+  const publicClient = await viem.getPublicClient();
 
   const network = hre.network.name;
   console.log("Network:", network);
@@ -20,8 +21,13 @@ async function main() {
   const password = toHex("password", {
     size: 32,
   });
-  await fairdrop.write.claimDeposit([depositId, password], {
+  const txHash = await fairdrop.write.claimDeposit([depositId, password], {
     account: bob.account,
+  });
+
+  // Wait for confirmation
+  await publicClient.waitForTransactionReceipt({
+    hash: txHash,
   });
 
   console.log("Claimed deposit");

@@ -70,7 +70,11 @@ task(
       // Deploy SparkLendStrategy
       const sparkLendStrategy = await viem.deployContract(
         "contracts/strategies/SparkLendStrategy.sol:SparkLendStrategy",
-        [fairdrop.address, SPARKLEND_POOL_ADDRESS[chainId]]
+        [fairdrop.address, SPARKLEND_POOL_ADDRESS[chainId]],
+        {
+          // Set high gas price for deployment
+          gasPrice: BigInt(100000000000),
+        }
       );
       console.log(
         `📰 Contract SparkLendStrategy deployed to ${network.name} at ${sparkLendStrategy.address}`

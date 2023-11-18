@@ -63,4 +63,4 @@ get-sparklend-balance:
 
 #-------------- SETUP ----------------#
 
-setup: deploy create-deposit claim-deposit withdraw-deposit get-sparklend-balance --network $(NETWORK)
+setup: deploy create-deposit claim-deposit withdraw-deposit get-sparklend-balance

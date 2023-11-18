@@ -138,6 +138,7 @@ const config: HardhatUserConfig = {
     ],
     apiKey: {
       polygonMumbai: process.env.POLYGONSCAN_API_KEY || "",
+      goerli: process.env.ETHERSCAN_API_KEY || "",
       chiado: process.env.GNOSISSCAN_API_KEY || "", // doesn't work
       gnosis: process.env.GNOSISSCAN_API_KEY || "", // doesn't work
       scrollSepolia: "abc", // doesn't work
