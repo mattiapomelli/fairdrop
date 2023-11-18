@@ -2,7 +2,7 @@ export const FairdropAbi = [
   {
     inputs: [
       {
-        internalType: "address",
+        internalType: "contract IWorldID",
         name: "_worldId",
         type: "address",
       },
@@ -257,34 +257,6 @@ export const FairdropAbi = [
     inputs: [
       {
         internalType: "address",
-        name: "signal",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "root",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "nullifierHash",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256[8]",
-        name: "proof",
-        type: "uint256[8]",
-      },
-    ],
-    name: "_verifyWorldId",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
         name: "to",
         type: "address",
       },
@@ -359,9 +331,9 @@ export const FairdropAbi = [
   {
     inputs: [
       {
-        internalType: "bytes32",
-        name: "_hashedPassword",
-        type: "bytes32",
+        internalType: "bytes32[]",
+        name: "_hashedPasswords",
+        type: "bytes32[]",
       },
       {
         internalType: "uint256",
@@ -394,14 +366,8 @@ export const FairdropAbi = [
         type: "bool",
       },
     ],
-    name: "createDeposit",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
+    name: "createDeposits",
+    outputs: [],
     stateMutability: "payable",
     type: "function",
   },
@@ -460,6 +426,24 @@ export const FairdropAbi = [
         name: "worldIdVerification",
         type: "bool",
       },
+      {
+        internalType: "uint256",
+        name: "batchId",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "externalNullifier",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
     ],
     stateMutability: "view",
     type: "function",
@@ -478,6 +462,19 @@ export const FairdropAbi = [
         internalType: "address",
         name: "",
         type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "groupId",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
       },
     ],
     stateMutability: "view",
@@ -515,6 +512,30 @@ export const FairdropAbi = [
         internalType: "string",
         name: "",
         type: "string",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    name: "nullifierHashes",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool",
       },
     ],
     stateMutability: "view",
@@ -662,6 +683,11 @@ export const FairdropAbi = [
         name: "proof",
         type: "uint256[8]",
       },
+      {
+        internalType: "uint256",
+        name: "batchId",
+        type: "uint256",
+      },
     ],
     name: "testWorldcoin",
     outputs: [],
@@ -726,6 +752,19 @@ export const FairdropAbi = [
     name: "withdrawDeposit",
     outputs: [],
     stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "worldId",
+    outputs: [
+      {
+        internalType: "contract IWorldID",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
     type: "function",
   },
 ] as const;

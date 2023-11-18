@@ -7,7 +7,7 @@ deploy:
 	npx hardhat deploy --network $(NETWORK)
 
 deploy-localhost: 
-	npx hardhat deploy --network localhost
+	npx hardhat deploy --network localhost --save
 
 deploy-mumbai:
 	npx hardhat deploy --network mumbai --verify

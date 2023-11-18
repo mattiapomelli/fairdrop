@@ -46,10 +46,26 @@
     ]
   },
   "Fairdrop": {
-    "address": "0x58f7fc8d443507b9a14a0fe33330f07c85b474e9",
+    "address": "0x07b9837e81b917451690f2ef4752ac5f1434450b",
     "abi": [
       {
-        "inputs": [],
+        "inputs": [
+          {
+            "internalType": "contract IWorldID",
+            "name": "_worldId",
+            "type": "address"
+          },
+          {
+            "internalType": "string",
+            "name": "_appId",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "_actionId",
+            "type": "string"
+          }
+        ],
         "stateMutability": "nonpayable",
         "type": "constructor"
       },
@@ -154,6 +170,11 @@
           }
         ],
         "name": "ERC721NonexistentToken",
+        "type": "error"
+      },
+      {
+        "inputs": [],
+        "name": "InvalidNullifier",
         "type": "error"
       },
       {
@@ -329,6 +350,26 @@
             "internalType": "bytes32",
             "name": "_password",
             "type": "bytes32"
+          },
+          {
+            "internalType": "address",
+            "name": "signal",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "root",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "nullifierHash",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256[8]",
+            "name": "proof",
+            "type": "uint256[8]"
           }
         ],
         "name": "claimDeposit",
@@ -339,9 +380,9 @@
       {
         "inputs": [
           {
-            "internalType": "bytes32",
-            "name": "_hashedPassword",
-            "type": "bytes32"
+            "internalType": "bytes32[]",
+            "name": "_hashedPasswords",
+            "type": "bytes32[]"
           },
           {
             "internalType": "uint256",
@@ -362,16 +403,20 @@
             "internalType": "contract IStrategy",
             "name": "_strategy",
             "type": "address"
-          }
-        ],
-        "name": "createDeposit",
-        "outputs": [
+          },
           {
-            "internalType": "uint256",
-            "name": "",
-            "type": "uint256"
+            "internalType": "bool",
+            "name": "_checkEligibility",
+            "type": "bool"
+          },
+          {
+            "internalType": "bool",
+            "name": "_worldIdVerification",
+            "type": "bool"
           }
         ],
+        "name": "createDeposits",
+        "outputs": [],
         "stateMutability": "payable",
         "type": "function"
       },
@@ -419,6 +464,34 @@
             "internalType": "bool",
             "name": "claimed",
             "type": "bool"
+          },
+          {
+            "internalType": "bool",
+            "name": "checkEligibility",
+            "type": "bool"
+          },
+          {
+            "internalType": "bool",
+            "name": "worldIdVerification",
+            "type": "bool"
+          },
+          {
+            "internalType": "uint256",
+            "name": "batchId",
+            "type": "uint256"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "inputs": [],
+        "name": "externalNullifier",
+        "outputs": [
+          {
+            "internalType": "uint256",
+            "name": "",
+            "type": "uint256"
           }
         ],
         "stateMutability": "view",
@@ -438,6 +511,19 @@
             "internalType": "address",
             "name": "",
             "type": "address"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "inputs": [],
+        "name": "groupId",
+        "outputs": [
+          {
+            "internalType": "uint256",
+            "name": "",
+            "type": "uint256"
           }
         ],
         "stateMutability": "view",
@@ -475,6 +561,30 @@
             "internalType": "string",
             "name": "",
             "type": "string"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "uint256",
+            "name": "",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "",
+            "type": "uint256"
+          }
+        ],
+        "name": "nullifierHashes",
+        "outputs": [
+          {
+            "internalType": "bool",
+            "name": "",
+            "type": "bool"
           }
         ],
         "stateMutability": "view",
@@ -603,6 +713,39 @@
       {
         "inputs": [
           {
+            "internalType": "address",
+            "name": "signal",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "root",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "nullifierHash",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256[8]",
+            "name": "proof",
+            "type": "uint256[8]"
+          },
+          {
+            "internalType": "uint256",
+            "name": "batchId",
+            "type": "uint256"
+          }
+        ],
+        "name": "testWorldcoin",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
             "internalType": "uint256",
             "name": "tokenId",
             "type": "uint256"
@@ -659,11 +802,24 @@
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
+      },
+      {
+        "inputs": [],
+        "name": "worldId",
+        "outputs": [
+          {
+            "internalType": "contract IWorldID",
+            "name": "",
+            "type": "address"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
       }
     ]
   },
   "TestERC20": {
-    "address": "0x470c9a0dedb21c08fea4a67e7ef09780dc071f5a",
+    "address": "0xc1ee53801a6350311a5942da3084ad500ca30620",
     "abi": [
       {
         "inputs": [
@@ -1000,7 +1156,7 @@
     ]
   },
   "DemoFi": {
-    "address": "0x7e18f7e10781f8daeb980c8cf99ebb8415f9d02e",
+    "address": "0xe393fb46c545aad9dc4f37b6d149d3401863bac5",
     "abi": [
       {
         "inputs": [],
@@ -1260,7 +1416,7 @@
     ]
   },
   "DemoFiStrategy": {
-    "address": "0x584b9958b653e313b9b90f2bc214567cc37a3da0",
+    "address": "0x58f7fc8d443507b9a14a0fe33330f07c85b474e9",
     "abi": [
       {
         "inputs": [
@@ -1295,6 +1451,25 @@
           }
         ],
         "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "",
+            "type": "address"
+          }
+        ],
+        "name": "isEligible",
+        "outputs": [
+          {
+            "internalType": "bool",
+            "name": "",
+            "type": "bool"
+          }
+        ],
+        "stateMutability": "pure",
         "type": "function"
       },
       {
