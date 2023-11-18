@@ -14,6 +14,7 @@ describe("Fairdrop", () => {
   let deployer: WalletClient,
     alice: WalletClient,
     bob: WalletClient,
+    carol: WalletClient,
     fairdropAddress: `0x${string}`,
     testErc20Address: `0x${string}`,
     demoFiPoolAddress: `0x${string}`,
@@ -28,7 +29,7 @@ describe("Fairdrop", () => {
   });
 
   before(async () => {
-    [deployer, alice, bob] = await viem.getWalletClients();
+    [deployer, alice, bob, carol] = await viem.getWalletClients();
 
     // Deploy Fairdrop
     const fairdrop = await viem.deployContract("Fairdrop", []);
@@ -159,9 +160,9 @@ describe("Fairdrop", () => {
       const password = toHex("password", {
         size: 32,
       });
-      const depositId = BigInt(1);
+      const unexistingDepositId = BigInt(1);
 
-      const tx = fairdrop.write.claimDeposit([depositId, password], {
+      const tx = fairdrop.write.claimDeposit([unexistingDepositId, password], {
         account: bob.account,
       });
       await expect(tx).to.be.rejectedWith("Deposit doesn't exist");
@@ -237,6 +238,15 @@ describe("Fairdrop", () => {
         expect(fairdropYieldTokenBalance).to.equal(depositAmount);
       });
 
+      it("Should mint an NFT to the claimer", async () => {
+        const fairdrop = await viem.getContractAt("Fairdrop", fairdropAddress);
+
+        const depositOwner = await fairdrop.read.ownerOf([depositId]);
+        expect(depositOwner.toLowerCase()).to.equal(
+          bob.account?.address.toLowerCase()
+        );
+      });
+
       it("Deposit can't be claimed again", async () => {
         const fairdrop = await viem.getContractAt("Fairdrop", fairdropAddress);
 
@@ -272,6 +282,15 @@ describe("Fairdrop", () => {
         account: bob.account,
       });
       await expect(tx).to.be.rejectedWith("Deposit not yet withdrawable");
+    });
+
+    it("fails if sender is not owner of the deposit NFT", async () => {
+      const fairdrop = await viem.getContractAt("Fairdrop", fairdropAddress);
+
+      const tx = fairdrop.write.withdrawDeposit([depositId, withdrawAmount], {
+        account: carol.account,
+      });
+      await expect(tx).to.be.rejectedWith("Not owner of deposit");
     });
 
     describe("Successful withdraw", async () => {

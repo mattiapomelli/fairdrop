@@ -2,12 +2,13 @@
 pragma solidity ^0.8.9;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 
 import {IStrategy} from "./interfaces/IStrategy.sol";
 
 import "hardhat/console.sol";
 
-contract Fairdrop {
+contract Fairdrop is ERC721 {
     struct Deposit {
         address depositor;
         bytes32 hashedPassword;
@@ -33,6 +34,10 @@ contract Fairdrop {
         address indexed _recipientAddress,
         uint256 _amount
     );
+
+    // =========================== Constructor ==============================
+
+    constructor() ERC721("Fairdrop", "FAR") {}
 
     // =========================== User functions ==============================
 
@@ -105,6 +110,9 @@ contract Fairdrop {
         token.approve(address(strategy), deposit.amount);
         strategy.supply(address(token), deposit.amount);
 
+        // Mint NFT to sender
+        _safeMint(msg.sender, _depositId);
+
         emit DepositClaimed(_depositId, msg.sender, deposit.amount);
     }
 
@@ -112,6 +120,9 @@ contract Fairdrop {
         // Check that the deposit exists and that it isn't already claimed
         require(_depositId < deposits.length, "Deposit doesn't exist");
         Deposit storage deposit = deposits[_depositId];
+
+        // Check user owns the NFT for the deposit
+        require(ownerOf(_depositId) == msg.sender, "Not owner of deposit");
 
         require(deposit.claimed, "Deposit must be claimed before withdrawal");
         require(deposit.amount >= _amount, "Not enough funds");
