@@ -26,6 +26,8 @@ contract Fairdrop is ERC721 {
         uint256 batchId; // The batch ID of the deposit
     }
 
+    uint256 batchIdCounter = 0;
+
     Deposit[] public deposits;
 
     // =========================== Worldcoin ==============================
@@ -83,26 +85,38 @@ contract Fairdrop is ERC721 {
 
     /**
      * @dev Create a new deposit
-     * @param _hashedPassword Hash of the password
+     * @param _hashedPasswords Hash of the password
      * @param _withdrawableAt Timestamp after which the deposit can be withdrawn
      * @param _tokenAddress Address of the ERC20 token to deposit
      * @param _tokenAmount Amount of the ERC20 token to deposit
+     * @param _strategy Strategy to use for the deposit
+     * @param _checkEligibility Whether to check eligibility to claim the deposit or anyone can claim it
+     * @param _worldIdVerification Whether the users have to be verified by World ID to claim the deposit
      */
-    function createDeposit(
-        bytes32 _hashedPassword,
+    function createDeposits(
+        bytes32[] memory _hashedPasswords,
         uint256 _withdrawableAt,
         address _tokenAddress,
         uint256 _tokenAmount,
         IStrategy _strategy,
         bool _checkEligibility,
-        bool _worldIdVerification,
-        uint256 _batchId
-    ) public payable returns (uint256) {
+        bool _worldIdVerification
+    ) public payable {
+        require(_hashedPasswords.length > 0, "No hashed passwords provided");
+        require(_tokenAmount > 0, "Token amount must be greater than zero");
+
+        batchIdCounter += 1;
+        uint256 _batchId = batchIdCounter;
+
         if (_tokenAddress != address(0)) {
             require(msg.value == 0, "Cannot deposit both ETH and ERC20 token");
             IERC20 token = IERC20(_tokenAddress);
             require(
-                token.transferFrom(msg.sender, address(this), _tokenAmount),
+                token.transferFrom(
+                    msg.sender,
+                    address(this),
+                    _tokenAmount * _hashedPasswords.length
+                ),
                 "Failed to transfer ERC20 token"
             );
         } else {
@@ -110,25 +124,25 @@ contract Fairdrop is ERC721 {
             _tokenAmount = msg.value;
         }
 
-        deposits.push(
-            Deposit({
-                depositor: msg.sender,
-                hashedPassword: _hashedPassword,
-                amount: _tokenAmount,
-                tokenAddress: _tokenAddress,
-                withdrawableAt: _withdrawableAt,
-                strategy: _strategy,
-                claimed: false,
-                checkEligibility: _checkEligibility,
-                worldIdVerification: _worldIdVerification,
-                batchId: _batchId
-            })
-        );
-        uint256 depositId = deposits.length - 1;
+        for (uint256 i = 0; i < _hashedPasswords.length; i++) {
+            deposits.push(
+                Deposit({
+                    depositor: msg.sender,
+                    hashedPassword: _hashedPasswords[i],
+                    amount: _tokenAmount,
+                    tokenAddress: _tokenAddress,
+                    withdrawableAt: _withdrawableAt,
+                    strategy: _strategy,
+                    claimed: false,
+                    checkEligibility: _checkEligibility,
+                    worldIdVerification: _worldIdVerification,
+                    batchId: _batchId
+                })
+            );
+            uint256 depositId = deposits.length - 1;
 
-        emit DepositCreated(depositId, msg.sender, _tokenAmount);
-
-        return depositId;
+            emit DepositCreated(depositId, msg.sender, _tokenAmount);
+        }
     }
 
     /**

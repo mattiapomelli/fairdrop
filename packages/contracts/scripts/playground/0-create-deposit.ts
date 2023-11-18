@@ -56,24 +56,22 @@ async function main() {
   const password = toHex("password", {
     size: 32,
   });
-  const hashedPassword = keccak256(password);
+  const hashedPasswords = [keccak256(password)];
   const block = await publicClient.getBlock();
   // const withdrawableAt = BigInt(block.timestamp) + BigInt(100);
   const withdrawableAt = BigInt(block.timestamp);
   const checkElibility = false;
   const worldcoinVerification = false;
-  const batchId = BigInt(1);
 
-  const txHash2 = await fairdrop.write.createDeposit(
+  const txHash2 = await fairdrop.write.createDeposits(
     [
-      hashedPassword,
+      hashedPasswords,
       withdrawableAt,
       token.address,
       depositAmount,
       strategy.address,
       checkElibility,
       worldcoinVerification,
-      batchId,
     ],
     {
       account: alice.account,

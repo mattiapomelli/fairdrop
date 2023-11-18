@@ -65,7 +65,7 @@ describe("Fairdrop", () => {
   });
 
   describe("Create deposit", async () => {
-    let hashedPassword: `0x${string}`;
+    let hashedPasswords: `0x${string}`[];
     let aliceBalanceBefore: bigint;
 
     before(async () => {
@@ -77,7 +77,7 @@ describe("Fairdrop", () => {
       const password = toHex("password", {
         size: 32,
       });
-      hashedPassword = keccak256(password);
+      hashedPasswords = [keccak256(password)];
 
       // Get current block timestamp
       const publicClient = await viem.getPublicClient();
@@ -102,17 +102,15 @@ describe("Fairdrop", () => {
         alice.account?.address as `0x${string}`,
       ]);
 
-      const batchId = BigInt(1);
-      await fairdrop.write.createDeposit(
+      await fairdrop.write.createDeposits(
         [
-          hashedPassword,
+          hashedPasswords,
           withdrawableAt,
           testErc20.address,
           depositAmount,
           demoFiStrategyAddress,
           false,
           false,
-          batchId,
         ],
         {
           account: alice.account,
@@ -131,7 +129,7 @@ describe("Fairdrop", () => {
         alice.account?.address.toLowerCase()
       );
       // Check hashed password matches
-      expect(deposit[1].toLowerCase()).to.equal(hashedPassword);
+      expect(deposit[1]).to.equal(hashedPasswords[0]);
       // Check amount matches
       expect(deposit[2]).to.equal(depositAmount);
       // Check token address
