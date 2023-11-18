@@ -1,3 +1,6 @@
+import Link from "next/link";
+
+import { Button } from "@/components/ui/button";
 import { findMostRecentSparkLendTx } from "@/lib/axiom/parse-recent-tx";
 
 interface PageProps {
@@ -18,8 +21,7 @@ export default async function Check({ searchParams }: PageProps) {
 
   // Find the user's uniswap transaction with the `Swap` event
   // const uniswapTx = await findMostRecentUniswapTx(connected);
-  const uniswapTx = await findMostRecentSparkLendTx(connected);
-  console.log("txns: ", uniswapTx);
+  const sparkLendTx = await findMostRecentSparkLendTx(connected);
 
   const renderNotEligible = () => {
     return (
@@ -30,22 +32,40 @@ export default async function Check({ searchParams }: PageProps) {
   };
 
   const renderEligible = () => {
-    const log = uniswapTx?.log;
+    const log = sparkLendTx?.log;
     const txHash = log?.transactionHash;
     const blockNumber = log?.blockNumber;
-    const logIdx = uniswapTx?.logIdx;
+    const logIdx = sparkLendTx?.logIdx;
 
     if (txHash === undefined || blockNumber === undefined || logIdx === undefined) {
       return renderNotEligible();
     }
 
-    return <div className="text-center">{"Congratulations! You're eligible for the airdrop."}</div>;
+    return (
+      <div className="text-center">
+        {"Congratulations! You're eligible for the airdrop."}
+
+        <Link
+          href={
+            "/claim?" +
+            new URLSearchParams({
+              connected,
+              txHash,
+              blockNumber: blockNumber.toString(),
+              logIdx: logIdx.toString(),
+            })
+          }
+        >
+          <Button>Claim</Button>
+        </Link>
+      </div>
+    );
   };
 
   return (
-    <>
+    <div className="container">
       <h1 className="text-2xl font-bold">Check eligibility</h1>
-      {uniswapTx !== null ? renderEligible() : renderNotEligible()}
-    </>
+      {sparkLendTx !== null ? renderEligible() : renderNotEligible()}
+    </div>
   );
 }

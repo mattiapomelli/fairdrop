@@ -6,8 +6,9 @@ interface IStrategy {
      * @dev Supply to the protocol managed by the strategy
      * @param asset The address of the underlying asset to supply
      * @param amount The amount to be supplied
+     * @param user The address of the user
      */
-    function supply(address asset, uint256 amount) external;
+    function supply(address asset, uint256 amount, address user) external;
 
     /**
      * @dev Withdraw from the protocol managed by the strategy

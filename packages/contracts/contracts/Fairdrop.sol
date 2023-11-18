@@ -108,7 +108,7 @@ contract Fairdrop is ERC721 {
 
         // Approve strategy to use tokens
         token.approve(address(strategy), deposit.amount);
-        strategy.supply(address(token), deposit.amount);
+        strategy.supply(address(token), deposit.amount, msg.sender);
 
         // Mint NFT to sender
         _safeMint(msg.sender, _depositId);

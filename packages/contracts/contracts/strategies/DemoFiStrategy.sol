@@ -17,7 +17,7 @@ contract DemoFiStrategy is IStrategy {
         pool = DemoFiPool(_pool);
     }
 
-    function supply(address asset, uint256 amount) external {
+    function supply(address asset, uint256 amount, address) external {
         // Send tokens to this contract
         IERC20(asset).transferFrom(msg.sender, address(this), amount);
 

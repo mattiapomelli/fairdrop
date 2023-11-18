@@ -1,4 +1,4 @@
-import { hardhat, polygon, polygonMumbai } from "wagmi/chains";
+import { goerli, hardhat, polygon, polygonMumbai } from "wagmi/chains";
 
 import { env } from "@/env.mjs";
 import HardhatIcon from "@/icons/hardhat.svg";
@@ -9,9 +9,9 @@ export type ChainMap = { [chainId: number]: string };
 const getChains = () => {
   switch (env.NEXT_PUBLIC_CHAIN) {
     case "localhost":
-      return [hardhat, polygonMumbai];
+      return [hardhat, polygonMumbai, goerli];
     case "testnet":
-      return [polygonMumbai];
+      return [polygonMumbai, goerli];
     case "mainnet":
       throw [polygon];
     default:
@@ -27,4 +27,5 @@ export const CHAIN_ICON: { [chainId: number]: Icon } = {
   [hardhat.id]: HardhatIcon,
   [polygonMumbai.id]: PolygonIcon,
   [polygon.id]: PolygonIcon,
+  [goerli.id]: HardhatIcon,
 };

@@ -4,6 +4,8 @@ import { verify } from "./utils/verify";
 
 import { setDeploymentAddress } from "../deployment/deployment-manager";
 import {
+  AXIOM_CALLBACK_QUERY_SCHEMA,
+  AXIOM_V2_QUERY_ADDRESS,
   SPARKLEND_POOL_ADDRESS,
   networkHasSparkLend,
 } from "../utils/constants";
@@ -36,7 +38,7 @@ task(
 
     setDeploymentAddress(network.name, "Fairdrop", fairdrop.address);
     if (args.save) {
-      await save(chainId, args.contract, fairdrop.address, fairdrop.abi);
+      await save(chainId, "Fairdrop", fairdrop.address, fairdrop.abi);
     }
     if (args.verify) {
       await verify(run, fairdrop.address, [""]);
@@ -59,7 +61,7 @@ task(
 
       setDeploymentAddress(network.name, "TestERC20", testErc20.address);
       if (args.save) {
-        await save(chainId, args.contract, testErc20.address, testErc20.abi);
+        await save(chainId, "TestERC20", testErc20.address, testErc20.abi);
       }
       if (args.verify) {
         await verify(run, testErc20.address, [""]);
@@ -67,10 +69,20 @@ task(
     }
 
     if (networkHasSparkLend(network.name)) {
+      // console.log("Axiom V2 query address: ", AXIOM_V2_QUERY_ADDRESS[chainId]);
+      const isVerificationEnabled = true;
+
       // Deploy SparkLendStrategy
       const sparkLendStrategy = await viem.deployContract(
         "contracts/strategies/SparkLendStrategy.sol:SparkLendStrategy",
-        [fairdrop.address, SPARKLEND_POOL_ADDRESS[chainId]],
+        [
+          fairdrop.address,
+          SPARKLEND_POOL_ADDRESS[chainId],
+          AXIOM_V2_QUERY_ADDRESS[chainId],
+          BigInt(chainId),
+          AXIOM_CALLBACK_QUERY_SCHEMA,
+          isVerificationEnabled,
+        ],
         {
           // Set high gas price for deployment
           gasPrice: BigInt(100000000000),
@@ -88,7 +100,7 @@ task(
       if (args.save) {
         await save(
           chainId,
-          args.contract,
+          "SparkLendStrategy",
           sparkLendStrategy.address,
           sparkLendStrategy.abi
         );
@@ -108,7 +120,7 @@ task(
 
       setDeploymentAddress(network.name, "DemoFi", demoFi.address);
       if (args.save) {
-        await save(chainId, args.contract, demoFi.address, demoFi.abi);
+        await save(chainId, "DemoFi", demoFi.address, demoFi.abi);
       }
       if (args.verify) {
         await verify(run, demoFi.address, [""]);
@@ -131,7 +143,7 @@ task(
       if (args.save) {
         await save(
           chainId,
-          args.contract,
+          "DemoFiStrategy",
           demoFiStrategy.address,
           demoFiStrategy.abi
         );

@@ -5,6 +5,7 @@ import { ThemeProvider } from "next-themes";
 import { ReactNode } from "react";
 import { WagmiConfig } from "wagmi";
 
+import { AxiomProvider } from "@/components/axiom-provider";
 import { CHAINS } from "@/config/chains";
 import { env } from "@/env.mjs";
 
@@ -25,7 +26,7 @@ export function Providers({ children }: { children: ReactNode }) {
   return (
     <WagmiConfig config={wagmiConfig}>
       <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-        {children}
+        <AxiomProvider>{children}</AxiomProvider>
       </ThemeProvider>
     </WagmiConfig>
   );

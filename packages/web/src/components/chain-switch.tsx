@@ -19,18 +19,22 @@ export const ChainSwitch = () => {
   const { chain } = useNetwork();
   const { open } = useWeb3Modal();
 
+  if (!chain || chain.unsupported) {
+    return (
+      <Button
+        onClick={() => open({ view: "Networks" })}
+        size="sm"
+        className="bg-red-400 hover:bg-red-500"
+      >
+        Unsupported network
+      </Button>
+    );
+  }
+
   return (
-    <button onClick={() => open({ view: "Networks" })}>
-      {!chain || chain.unsupported ? (
-        <Button size="sm" className="bg-red-400 hover:bg-red-500">
-          Unsupported network
-        </Button>
-      ) : (
-        <span className={cn(buttonVariants({ variant: "secondary" }), "gap-2 px-4")}>
-          <ChainIcon chain={chain} className="h-4 w-4" />
-          <span className="hidden sm:block">{chain?.name}</span>
-        </span>
-      )}
+    <button className={cn(buttonVariants({ variant: "secondary" }), "gap-2 px-4")}>
+      <ChainIcon chain={chain} className="h-4 w-4" />
+      <span className="hidden sm:block">{chain?.name}</span>
     </button>
   );
 };

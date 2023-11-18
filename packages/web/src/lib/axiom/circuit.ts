@@ -56,7 +56,7 @@ Supply (
   // get the block number for receipt
   let blockNum = receipt.blockNumber().toCircuitValue();
 
-  // get the `to` field of the transaction
+  // get the SparkLend pool address ('to' field of the transaction)
   let tx = getTx(blockNumber, txIdx);
   let txTo = tx.to().toCircuitValue();
 
