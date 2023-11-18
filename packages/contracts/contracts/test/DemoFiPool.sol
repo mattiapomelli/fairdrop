@@ -14,22 +14,14 @@ contract PoolShareToken is ERC20 {
     function mint(address account, uint256 amount) external {
         _mint(account, amount);
     }
+
+    function burn(address account, uint256 amount) external {
+        _burn(account, amount);
+    }
 }
 
 contract DemoFiPool is IPool {
     PoolShareToken public poolShareToken;
-
-    // User account dat struct
-    struct UserAccountData {
-        uint256 totalCollateralBase;
-        uint256 totalDebtBase;
-        uint256 availableBorrowsBase;
-        uint256 currentLiquidationThreshold;
-        uint256 ltv;
-        uint256 healthFactor;
-    }
-
-    mapping(address => UserAccountData) public userAccountData;
 
     constructor() {
         poolShareToken = new PoolShareToken();
@@ -44,9 +36,6 @@ contract DemoFiPool is IPool {
         // Send tokens to the contract
         IERC20(asset).transferFrom(msg.sender, address(this), amount);
 
-        // Update user account data
-        userAccountData[onBehalfOf].totalCollateralBase += amount;
-
         // Mint pool share tokens
         poolShareToken.mint(onBehalfOf, amount);
     }
@@ -55,7 +44,21 @@ contract DemoFiPool is IPool {
         address asset,
         uint256 amount,
         address to
-    ) external returns (uint256) {}
+    ) external returns (uint256) {
+        // Check if the user has enough pool share tokens
+        require(
+            poolShareToken.balanceOf(msg.sender) >= amount,
+            "Not enough pool share tokens"
+        );
+
+        // Burn pool share tokens
+        poolShareToken.burn(msg.sender, amount);
+
+        // Transfer tokens to the user
+        IERC20(asset).transfer(to, amount);
+
+        return amount;
+    }
 
     function borrow(
         address asset,
@@ -79,14 +82,10 @@ contract DemoFiPool is IPool {
             uint256 healthFactor
         )
     {
-        return (
-            userAccountData[user].totalCollateralBase,
-            userAccountData[user].totalDebtBase,
-            userAccountData[user].availableBorrowsBase,
-            userAccountData[user].currentLiquidationThreshold,
-            userAccountData[user].ltv,
-            userAccountData[user].healthFactor
-        );
+        // Collateral is the balance of the pool share token
+        totalCollateralBase = poolShareToken.balanceOf(user);
+
+        return (totalCollateralBase, 0, 0, 0, 0, 0);
     }
 
     /**

@@ -1,5 +1,5 @@
 import hre, { viem } from "hardhat";
-import { SPARKLEND_POOL_ADDRESS_MAINNET } from "../../utils/constants";
+import { SPARKLEND_POOL_ADDRESS } from "../../utils/constants";
 import { getDeploymentAddress } from "../../deployment/deployment-manager";
 
 async function main() {
@@ -11,7 +11,7 @@ async function main() {
   // Get contracts
   const sparkLendPool = await viem.getContractAt(
     "contracts/interfaces/ISparkLendPool.sol:ISparkLendPool",
-    SPARKLEND_POOL_ADDRESS_MAINNET
+    SPARKLEND_POOL_ADDRESS[hre.network.config.chainId || 1]
   );
 
   const fairdrop = await viem.getContractAt(

@@ -1,8 +1,5 @@
 import hre, { viem } from "hardhat";
-import {
-  DAI_ADDRESS_MAINNET,
-  SPARKLEND_POOL_ADDRESS_MAINNET,
-} from "../../utils/constants";
+import { DAI_ADDRESS, SPARKLEND_POOL_ADDRESS } from "../../utils/constants";
 
 async function main() {
   const [deployer, alice, bob] = await viem.getWalletClients();
@@ -13,13 +10,18 @@ async function main() {
   // Get contracts
   const sparkLendPool = await viem.getContractAt(
     "contracts/interfaces/ISparkLendPool.sol:ISparkLendPool",
-    SPARKLEND_POOL_ADDRESS_MAINNET
+    SPARKLEND_POOL_ADDRESS[hre.network.config.chainId || 1]
   );
 
   // Claim deposit
   const depositAmount = BigInt(0);
   await sparkLendPool.write.supply(
-    [DAI_ADDRESS_MAINNET, depositAmount, alice.account.address, 0],
+    [
+      DAI_ADDRESS[hre.network.config.chainId || 1],
+      depositAmount,
+      alice.account.address,
+      0,
+    ],
     {
       account: alice.account,
     }

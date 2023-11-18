@@ -33,6 +33,9 @@ deploy-linea:
 deploy-devnet: 
 	npx hardhat deploy --network devnet
 
+deploy-goerli: 
+	npx hardhat deploy --network goerli
+
 # -------------- VERIFICATION -------------- #
 
 verify-scroll: 

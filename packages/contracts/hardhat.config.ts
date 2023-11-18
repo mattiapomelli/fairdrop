@@ -65,6 +65,11 @@ const config: HardhatUserConfig = {
       chainId: 1,
       accounts,
     },
+    goerli: {
+      url: "https://ethereum-goerli.publicnode.com",
+      accounts,
+      chainId: 5,
+    },
   },
   etherscan: {
     customChains: [

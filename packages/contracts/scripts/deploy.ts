@@ -3,7 +3,10 @@ import { save } from "./utils/save";
 import { verify } from "./utils/verify";
 
 import { setDeploymentAddress } from "../deployment/deployment-manager";
-import { SPARKLEND_POOL_ADDRESS_MAINNET } from "../utils/constants";
+import {
+  SPARKLEND_POOL_ADDRESS,
+  networkHasSparkLend,
+} from "../utils/constants";
 
 task(
   "deploy",
@@ -39,7 +42,7 @@ task(
       await verify(run, fairdrop.address, [""]);
     }
 
-    if (network.name !== "devnet") {
+    if (!networkHasSparkLend(network.name)) {
       // Deploy TestERC20
       const testErc20 = await viem.deployContract(
         "contracts/test/TestERC20.sol:TestERC20",
@@ -63,11 +66,11 @@ task(
       }
     }
 
-    if (network.name === "devnet") {
+    if (networkHasSparkLend(network.name)) {
       // Deploy SparkLendStrategy
       const sparkLendStrategy = await viem.deployContract(
         "contracts/strategies/SparkLendStrategy.sol:SparkLendStrategy",
-        [fairdrop.address, SPARKLEND_POOL_ADDRESS_MAINNET]
+        [fairdrop.address, SPARKLEND_POOL_ADDRESS[chainId]]
       );
       console.log(
         `📰 Contract SparkLendStrategy deployed to ${network.name} at ${sparkLendStrategy.address}`

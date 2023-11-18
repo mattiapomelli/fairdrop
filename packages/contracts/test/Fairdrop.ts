@@ -1,6 +1,14 @@
 import { viem } from "hardhat";
-import { WalletClient, keccak256, toHex, hexToBigInt } from "viem";
+import {
+  WalletClient,
+  keccak256,
+  toHex,
+  hexToBigInt,
+  createTestClient,
+  http,
+} from "viem";
 import { expect } from "chai";
+import { hardhat } from "viem/chains";
 
 describe("Fairdrop", () => {
   let deployer: WalletClient,
@@ -10,7 +18,14 @@ describe("Fairdrop", () => {
     testErc20Address: `0x${string}`,
     demoFiPoolAddress: `0x${string}`,
     demoFiStrategyAddress: `0x${string}`,
-    depositAmount = BigInt(100);
+    depositAmount = BigInt(100),
+    withdrawableAt: bigint;
+
+  const testClient = createTestClient({
+    chain: hardhat,
+    mode: "hardhat",
+    transport: http(),
+  });
 
   before(async () => {
     [deployer, alice, bob] = await viem.getWalletClients();
@@ -43,7 +58,6 @@ describe("Fairdrop", () => {
 
   describe("Create deposit", async () => {
     let hashedPassword: `0x${string}`;
-    let withdrawableAt: bigint;
     let aliceBalanceBefore: bigint;
 
     before(async () => {
@@ -200,7 +214,7 @@ describe("Fairdrop", () => {
         expect(deposit[6]).to.equal(true);
       });
 
-      it("Should send the aToken to the fairdrop contract", async () => {
+      it("Should send the yield token to the fairdrop contract", async () => {
         const fairdrop = await viem.getContractAt("Fairdrop", fairdropAddress);
         const demoFiPool = await viem.getContractAt(
           "contracts/test/DemoFiPool.sol:DemoFiPool",
@@ -210,17 +224,17 @@ describe("Fairdrop", () => {
         const reserveData = await demoFiPool.read.getReserveData([
           testErc20Address,
         ]);
-        const aToken = await viem.getContractAt(
+        const yieldToken = await viem.getContractAt(
           "ERC20",
           reserveData.aTokenAddress
         );
 
-        // Get aToken balance of fairdrop contract
-        const fairdropATokenBalance = await aToken.read.balanceOf([
+        // Get yield token balance of fairdrop contract
+        const fairdropYieldTokenBalance = await yieldToken.read.balanceOf([
           fairdrop.address,
         ]);
 
-        expect(fairdropATokenBalance).to.equal(depositAmount);
+        expect(fairdropYieldTokenBalance).to.equal(depositAmount);
       });
 
       it("Deposit can't be claimed again", async () => {
@@ -233,6 +247,95 @@ describe("Fairdrop", () => {
           account: bob.account,
         });
         await expect(tx).to.be.rejectedWith("Deposit already claimed");
+      });
+    });
+  });
+
+  describe("Withdraw deposit", async () => {
+    const depositId = BigInt(0);
+
+    it("fails if deposit doesn't exist", async () => {
+      const fairdrop = await viem.getContractAt("Fairdrop", fairdropAddress);
+      const depositId = BigInt(1);
+
+      const tx = fairdrop.write.withdrawDeposit([depositId], {
+        account: bob.account,
+      });
+      await expect(tx).to.be.rejectedWith("Deposit doesn't exist");
+    });
+
+    it("fails if deposit is not withdrawable yet", async () => {
+      const fairdrop = await viem.getContractAt("Fairdrop", fairdropAddress);
+
+      const tx = fairdrop.write.withdrawDeposit([depositId], {
+        account: bob.account,
+      });
+      await expect(tx).to.be.rejectedWith("Deposit not yet withdrawable");
+    });
+
+    describe("Successful withdraw", async () => {
+      before(async () => {
+        const fairdrop = await viem.getContractAt("Fairdrop", fairdropAddress);
+        const testErc20 = await viem.getContractAt(
+          "contracts/test/TestERC20.sol:TestERC20",
+          testErc20Address
+        );
+
+        // Check tokens were transferred to DemoFi
+        const demoFiPoolBalance = await testErc20.read.balanceOf([
+          demoFiPoolAddress,
+        ]);
+        expect(demoFiPoolBalance).to.equal(depositAmount);
+
+        // Go ahead in time to the time the deposit is withdrawable
+        await testClient.setNextBlockTimestamp({
+          timestamp: withdrawableAt,
+        });
+
+        await fairdrop.write.withdrawDeposit([depositId], {
+          account: bob.account,
+        });
+      });
+
+      it("Should send the tokens to the withdrawer", async () => {
+        const testErc20 = await viem.getContractAt(
+          "contracts/test/TestERC20.sol:TestERC20",
+          testErc20Address
+        );
+
+        // Check tokens were transferred to DemoFi
+        const bobBalance = await testErc20.read.balanceOf([
+          bob.account?.address as `0x${string}`,
+        ]);
+        expect(bobBalance).to.equal(depositAmount);
+      });
+
+      it("Should burn the yielf token from faidrop contract and srategy contract", async () => {
+        const demoFiPool = await viem.getContractAt(
+          "contracts/test/DemoFiPool.sol:DemoFiPool",
+          demoFiPoolAddress
+        );
+
+        const reserveData = await demoFiPool.read.getReserveData([
+          testErc20Address,
+        ]);
+        const yieldToken = await viem.getContractAt(
+          "ERC20",
+          reserveData.aTokenAddress
+        );
+
+        // Get yield token balance of fairdrop contract
+        const fairdropYieldTokenBalance = await yieldToken.read.balanceOf([
+          fairdropAddress,
+        ]);
+
+        expect(fairdropYieldTokenBalance).to.equal(BigInt(0));
+
+        // Get yield token balance of strategy contract
+        const fairdropStrategyYieldTokenBalance =
+          await yieldToken.read.balanceOf([demoFiStrategyAddress]);
+
+        expect(fairdropStrategyYieldTokenBalance).to.equal(BigInt(0));
       });
     });
   });

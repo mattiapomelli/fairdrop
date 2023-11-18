@@ -17,15 +17,34 @@ contract DemoFiStrategy is IStrategy {
         pool = DemoFiPool(_pool);
     }
 
-    function supply(address token, uint256 amount) external {
+    function supply(address asset, uint256 amount) external {
         // Send tokens to this contract
-        IERC20(token).transferFrom(msg.sender, address(this), amount);
+        IERC20(asset).transferFrom(msg.sender, address(this), amount);
 
         // Approve DemoFi pool to spend any amount of tokens
-        if (IERC20(token).allowance(address(this), address(pool)) < amount) {
-            IERC20(token).approve(address(pool), type(uint256).max);
+        if (IERC20(asset).allowance(address(this), address(pool)) < amount) {
+            IERC20(asset).approve(address(pool), type(uint256).max);
         }
 
-        pool.supply(token, amount, fairdropAddress, 0);
+        pool.supply(asset, amount, fairdropAddress, 0);
+    }
+
+    function withdraw(
+        address asset,
+        uint256 amount,
+        address to
+    ) external returns (uint256) {
+        // Get aTokens from sender
+        IERC20 aToken = IERC20(getYieldAssetFromUnderlying(asset));
+        aToken.transferFrom(msg.sender, address(this), amount);
+
+        uint256 withdrawnAmount = pool.withdraw(asset, amount, to);
+        return withdrawnAmount;
+    }
+
+    function getYieldAssetFromUnderlying(
+        address asset
+    ) public view returns (address) {
+        return pool.getReserveData(asset).aTokenAddress;
     }
 }

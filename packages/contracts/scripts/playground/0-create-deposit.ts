@@ -1,7 +1,7 @@
 import hre, { viem } from "hardhat";
 import { getDeploymentAddress } from "../../deployment/deployment-manager";
 import { keccak256, toHex, parseEther } from "viem";
-import { DAI_ADDRESS_MAINNET } from "../../utils/constants";
+import { DAI_ADDRESS, networkHasSparkLend } from "../../utils/constants";
 
 async function main() {
   const [, alice] = await viem.getWalletClients();
@@ -15,15 +15,14 @@ async function main() {
     getDeploymentAddress(network, "Fairdrop")
   );
 
-  const tokenAddress =
-    hre.network.name === "devnet"
-      ? DAI_ADDRESS_MAINNET
-      : getDeploymentAddress(network, "TestERC20");
+  const tokenAddress = networkHasSparkLend(network)
+    ? DAI_ADDRESS[hre.network.config.chainId || 1]
+    : getDeploymentAddress(network, "TestERC20");
   const token = await viem.getContractAt("ERC20", tokenAddress);
 
   const strategyAddress = getDeploymentAddress(
     network,
-    hre.network.name === "devnet" ? "SparkLendStrategy" : "DemoFiStrategy"
+    networkHasSparkLend(network) ? "SparkLendStrategy" : "DemoFiStrategy"
   );
   const strategy = await viem.getContractAt(
     "contracts/interfaces/IStrategy.sol:IStrategy",
