@@ -62,6 +62,7 @@ async function main() {
   const withdrawableAt = BigInt(block.timestamp);
   const checkElibility = false;
   const worldcoinVerification = false;
+  const batchId = BigInt(1);
 
   const txHash2 = await fairdrop.write.createDeposit(
     [
@@ -72,6 +73,7 @@ async function main() {
       strategy.address,
       checkElibility,
       worldcoinVerification,
+      batchId,
     ],
     {
       account: alice.account,

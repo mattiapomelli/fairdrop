@@ -23,6 +23,7 @@ contract Fairdrop is ERC721 {
         bool claimed;
         bool checkEligibility; // Whether to check eligibility to claim the deposit or anyone can claim it
         bool worldIdVerification; // Whether the users have to be verified by World ID to claim the deposit
+        uint256 batchId; // The batch ID of the deposit
     }
 
     Deposit[] public deposits;
@@ -41,8 +42,10 @@ contract Fairdrop is ERC721 {
     /// @dev The World ID group ID (always 1)
     uint256 public immutable groupId = 1;
 
-    /// @dev Whether a nullifier hash has been used already. Used to guarantee an action is only performed once by a single person
-    mapping(uint256 => bool) public nullifierHashes;
+    /// @dev Whether a nullifier hash has been used already for a specific batch of deposits.
+    /// Used to guarantee a person can only claim a single deposit per batch.
+    /// nullifierHash => batchId => used
+    mapping(uint256 => mapping(uint256 => bool)) public nullifierHashes;
 
     // =========================== Events ==============================
 
@@ -92,7 +95,8 @@ contract Fairdrop is ERC721 {
         uint256 _tokenAmount,
         IStrategy _strategy,
         bool _checkEligibility,
-        bool _worldIdVerification
+        bool _worldIdVerification,
+        uint256 _batchId
     ) public payable returns (uint256) {
         if (_tokenAddress != address(0)) {
             require(msg.value == 0, "Cannot deposit both ETH and ERC20 token");
@@ -116,7 +120,8 @@ contract Fairdrop is ERC721 {
                 strategy: _strategy,
                 claimed: false,
                 checkEligibility: _checkEligibility,
-                worldIdVerification: _worldIdVerification
+                worldIdVerification: _worldIdVerification,
+                batchId: _batchId
             })
         );
         uint256 depositId = deposits.length - 1;
@@ -159,7 +164,7 @@ contract Fairdrop is ERC721 {
 
         // Check if user is verified with WorldId
         if (deposit.worldIdVerification && address(worldId) != address(0)) {
-            _verifyWorldId(signal, root, nullifierHash, proof);
+            _verifyWorldId(signal, root, nullifierHash, proof, deposit.batchId);
         }
 
         // Check user is eligible to claim the deposit
@@ -214,9 +219,10 @@ contract Fairdrop is ERC721 {
         address signal,
         uint256 root,
         uint256 nullifierHash,
-        uint256[8] calldata proof
+        uint256[8] calldata proof,
+        uint256 batchId
     ) public {
-        _verifyWorldId(signal, root, nullifierHash, proof);
+        _verifyWorldId(signal, root, nullifierHash, proof, batchId);
     }
 
     // =========================== Internal functions ==============================
@@ -230,10 +236,11 @@ contract Fairdrop is ERC721 {
         address signal,
         uint256 root,
         uint256 nullifierHash,
-        uint256[8] calldata proof
+        uint256[8] calldata proof,
+        uint256 batchId
     ) internal {
         // First, we make sure this person hasn't done this before
-        if (nullifierHashes[nullifierHash]) revert InvalidNullifier();
+        if (nullifierHashes[nullifierHash][batchId]) revert InvalidNullifier();
 
         // We now verify the provided proof is valid and the user is verified by World ID
         worldId.verifyProof(
@@ -246,7 +253,7 @@ contract Fairdrop is ERC721 {
         );
 
         // We now record the user has done this, so they can't do it again (proof of uniqueness)
-        nullifierHashes[nullifierHash] = true;
+        nullifierHashes[nullifierHash][batchId] = true;
 
         // Finally, execute your logic here, for example issue a token, NFT, etc...
         // Make sure to emit some kind of event afterwards!

@@ -102,6 +102,7 @@ describe("Fairdrop", () => {
         alice.account?.address as `0x${string}`,
       ]);
 
+      const batchId = BigInt(1);
       await fairdrop.write.createDeposit(
         [
           hashedPassword,
@@ -111,6 +112,7 @@ describe("Fairdrop", () => {
           demoFiStrategyAddress,
           false,
           false,
+          batchId,
         ],
         {
           account: alice.account,
