@@ -1,10 +1,10 @@
 import contractAddressesJson from "./addresses.json";
 
-import { StorageAbi } from "@/config/abis/storage";
+import { FairdropAbi } from "@/config/abis/fairdrop";
 
 const contractAddresses = contractAddressesJson as Record<string, Record<number, `0x${string}`>>;
 
-export const getStorageConfig = (chainId: number) => ({
-  address: contractAddresses["Storage"][chainId],
-  abi: StorageAbi,
+export const getFairdropContractParams = (chainId: number) => ({
+  address: contractAddresses.Fairdrop[chainId],
+  abi: FairdropAbi,
 });

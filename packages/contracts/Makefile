@@ -39,10 +39,22 @@ deploy-devnet:
 deploy-goerli: 
 	npx hardhat deploy --network goerli
 
+deploy-optimism: 
+	npx hardhat deploy --network optimismGoerli
+
+deploy-worldcoin: 
+	npx hardhat deploy-worldcoin --network optimismGoerli
+
 # -------------- VERIFICATION -------------- #
 
 verify-scroll: 
 	npx hardhat deploy --network scrollSepolia --verify
+
+verify-goerli: 
+	npx hardhat verify --network goerli 0x5c97716b79d6146de6b2d1ffb238fae003d1244e "0x11cA3127182f7583EfC416a8771BD4d11Fae4334" "app_staging_0caea5b44fb78ba852926ffb770d4ef1" "claim-airdrop"
+
+verify-optimism: 
+	npx hardhat verify --network optimismGoerli 0xd751f9f4ecc8d543967cac3c2367c038af3a92eb "0x515f06B36E6D3b707eAecBdeD18d8B384944c87f" "app_staging_0caea5b44fb78ba852926ffb770d4ef1" "claim-airdrop"
 
 #-------------- PLAYGROUND ----------------#
 
@@ -61,6 +73,9 @@ supply-sparklend:
 get-sparklend-balance:
 	npx hardhat run scripts/playground/get-sparklend-balance.ts --network $(NETWORK)
 
+verify-worldcoin:
+	npx hardhat run scripts/playground/verify-worldcoin.ts --network $(NETWORK)
+
 #-------------- SETUP ----------------#
 
-setup: deploy create-deposit claim-deposit withdraw-deposit get-sparklend-balance
+setup: deploy create-deposit claim-deposit withdraw-deposit

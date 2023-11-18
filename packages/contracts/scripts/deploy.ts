@@ -7,8 +7,11 @@ import {
   AXIOM_CALLBACK_QUERY_SCHEMA,
   AXIOM_V2_QUERY_ADDRESS,
   SPARKLEND_POOL_ADDRESS,
+  WORLD_ID_ROUTER_ADDRESS,
   networkHasSparkLend,
+  networkHasWorldcoin,
 } from "../utils/constants";
+import { zeroAddress } from "viem";
 
 task(
   "deploy",
@@ -31,7 +34,21 @@ task(
     );
 
     // Deploy Fairdrop
-    const fairdrop = await viem.deployContract("Fairdrop", []);
+    const worldIdRouterAddress = networkHasWorldcoin(network.name)
+      ? WORLD_ID_ROUTER_ADDRESS[chainId]
+      : zeroAddress;
+    const worldcoinAppId = networkHasWorldcoin(network.name)
+      ? process.env.WORLDCOIN_APP_ID || ""
+      : "";
+    const worldcoinActionId = networkHasWorldcoin(network.name)
+      ? process.env.WORLDCOIN_ACTION_ID || ""
+      : "";
+
+    const fairdrop = await viem.deployContract("Fairdrop", [
+      worldIdRouterAddress,
+      worldcoinAppId,
+      worldcoinActionId,
+    ]);
     console.log(
       `📰 Contract Fairdrop deployed to ${network.name} at ${fairdrop.address}`
     );
@@ -125,10 +142,12 @@ task(
       }
 
       // Deploy DemoFiStrategy
+      console.log("Here");
       const demoFiStrategy = await viem.deployContract(
         "contracts/strategies/DemoFiStrategy.sol:DemoFiStrategy",
         [fairdrop.address, demoFi.address]
       );
+      console.log("Here 2");
       console.log(
         `📰 Contract DemoFiStrategy deployed to ${network.name} at ${demoFiStrategy.address}`
       );

@@ -6,9 +6,12 @@ import {
   hexToBigInt,
   createTestClient,
   http,
+  zeroAddress,
+  decodeAbiParameters,
 } from "viem";
 import { expect } from "chai";
 import { hardhat } from "viem/chains";
+import { getWorldCoinClaimParams } from "../utils/common";
 
 describe("Fairdrop", () => {
   let deployer: WalletClient,
@@ -32,7 +35,11 @@ describe("Fairdrop", () => {
     [deployer, alice, bob, carol] = await viem.getWalletClients();
 
     // Deploy Fairdrop
-    const fairdrop = await viem.deployContract("Fairdrop", []);
+    const fairdrop = await viem.deployContract("Fairdrop", [
+      zeroAddress,
+      "",
+      "",
+    ]);
     fairdropAddress = fairdrop.address;
 
     // Deploy TestERC20
@@ -103,6 +110,7 @@ describe("Fairdrop", () => {
           depositAmount,
           demoFiStrategyAddress,
           false,
+          false,
         ],
         {
           account: alice.account,
@@ -163,9 +171,12 @@ describe("Fairdrop", () => {
       });
       const unexistingDepositId = BigInt(1);
 
-      const tx = fairdrop.write.claimDeposit([unexistingDepositId, password], {
-        account: bob.account,
-      });
+      const tx = fairdrop.write.claimDeposit(
+        [unexistingDepositId, password, ...getWorldCoinClaimParams()],
+        {
+          account: bob.account,
+        }
+      );
       await expect(tx).to.be.rejectedWith("Deposit doesn't exist");
     });
 
@@ -175,9 +186,12 @@ describe("Fairdrop", () => {
         size: 32,
       });
 
-      const tx = fairdrop.write.claimDeposit([depositId, password], {
-        account: bob.account,
-      });
+      const tx = fairdrop.write.claimDeposit(
+        [depositId, password, ...getWorldCoinClaimParams()],
+        {
+          account: bob.account,
+        }
+      );
       await expect(tx).to.be.rejectedWith("Invalid password");
     });
 
@@ -187,9 +201,12 @@ describe("Fairdrop", () => {
         const password = toHex("password", {
           size: 32,
         });
-        await fairdrop.write.claimDeposit([depositId, password], {
-          account: bob.account,
-        });
+        await fairdrop.write.claimDeposit(
+          [depositId, password, ...getWorldCoinClaimParams()],
+          {
+            account: bob.account,
+          }
+        );
       });
 
       it("Should deposit the tokens into the protocol of the strategy", async () => {
@@ -254,9 +271,12 @@ describe("Fairdrop", () => {
         const password = toHex("password", {
           size: 32,
         });
-        const tx = fairdrop.write.claimDeposit([depositId, password], {
-          account: bob.account,
-        });
+        const tx = fairdrop.write.claimDeposit(
+          [depositId, password, ...getWorldCoinClaimParams()],
+          {
+            account: bob.account,
+          }
+        );
         await expect(tx).to.be.rejectedWith("Deposit already claimed");
       });
     });

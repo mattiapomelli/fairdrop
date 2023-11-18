@@ -1,6 +1,7 @@
 import hre, { viem } from "hardhat";
 import { getDeploymentAddress } from "../../deployment/deployment-manager";
 import { toHex } from "viem";
+import { getWorldCoinClaimParams } from "../../utils/common";
 
 async function main() {
   const [deployer, alice, bob] = await viem.getWalletClients();
@@ -20,9 +21,12 @@ async function main() {
   const password = toHex("password", {
     size: 32,
   });
-  const txHash = await fairdrop.write.claimDeposit([depositId, password], {
-    account: bob.account,
-  });
+  const txHash = await fairdrop.write.claimDeposit(
+    [depositId, password, ...getWorldCoinClaimParams()],
+    {
+      account: bob.account,
+    }
+  );
 
   // Wait for confirmation
   await publicClient.waitForTransactionReceipt({

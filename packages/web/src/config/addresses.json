@@ -3,8 +3,9 @@
     "31337": "0xc1ee53801a6350311a5942da3084ad500ca30620"
   },
   "Fairdrop": {
-    "5": "0x2832705d0828154339deb868ae71347c1850c244",
-    "31337": "0x58f7fc8d443507b9a14a0fe33330f07c85b474e9"
+    "5": "0xb79a7aab2663fc711258fb39df823b93a8463982",
+    "31337": "0x58f7fc8d443507b9a14a0fe33330f07c85b474e9",
+    "420": "0x7e18f7e10781f8daeb980c8cf99ebb8415f9d02e"
   },
   "TestERC20": {
     "31337": "0x470c9a0dedb21c08fea4a67e7ef09780dc071f5a"
@@ -20,5 +21,9 @@
   },
   "SparkLendPool": {
     "5": "0x26ca51Af4506DE7a6f0785D20CD776081a05fF6d"
+  },
+  "Worldcoin": {
+    "5": "0x5c97716b79d6146de6b2d1ffb238fae003d1244e",
+    "420": "0xd751f9f4ecc8d543967cac3c2367c038af3a92eb"
   }
 }

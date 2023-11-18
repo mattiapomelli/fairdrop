@@ -1,6 +1,22 @@
 export const FairdropAbi = [
   {
-    inputs: [],
+    inputs: [
+      {
+        internalType: "address",
+        name: "_worldId",
+        type: "address",
+      },
+      {
+        internalType: "string",
+        name: "_appId",
+        type: "string",
+      },
+      {
+        internalType: "string",
+        name: "_actionId",
+        type: "string",
+      },
+    ],
     stateMutability: "nonpayable",
     type: "constructor",
   },
@@ -105,6 +121,11 @@ export const FairdropAbi = [
       },
     ],
     name: "ERC721NonexistentToken",
+    type: "error",
+  },
+  {
+    inputs: [],
+    name: "InvalidNullifier",
     type: "error",
   },
   {
@@ -236,6 +257,34 @@ export const FairdropAbi = [
     inputs: [
       {
         internalType: "address",
+        name: "signal",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "root",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "nullifierHash",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256[8]",
+        name: "proof",
+        type: "uint256[8]",
+      },
+    ],
+    name: "_verifyWorldId",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
         name: "to",
         type: "address",
       },
@@ -281,6 +330,26 @@ export const FairdropAbi = [
         name: "_password",
         type: "bytes32",
       },
+      {
+        internalType: "address",
+        name: "signal",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "root",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "nullifierHash",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256[8]",
+        name: "proof",
+        type: "uint256[8]",
+      },
     ],
     name: "claimDeposit",
     outputs: [],
@@ -313,6 +382,16 @@ export const FairdropAbi = [
         internalType: "contract IStrategy",
         name: "_strategy",
         type: "address",
+      },
+      {
+        internalType: "bool",
+        name: "_checkEligibility",
+        type: "bool",
+      },
+      {
+        internalType: "bool",
+        name: "_worldIdVerification",
+        type: "bool",
       },
     ],
     name: "createDeposit",
@@ -369,6 +448,16 @@ export const FairdropAbi = [
       {
         internalType: "bool",
         name: "claimed",
+        type: "bool",
+      },
+      {
+        internalType: "bool",
+        name: "checkEligibility",
+        type: "bool",
+      },
+      {
+        internalType: "bool",
+        name: "worldIdVerification",
         type: "bool",
       },
     ],
@@ -549,6 +638,34 @@ export const FairdropAbi = [
       },
     ],
     stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "signal",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "root",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "nullifierHash",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256[8]",
+        name: "proof",
+        type: "uint256[8]",
+      },
+    ],
+    name: "testWorldcoin",
+    outputs: [],
+    stateMutability: "nonpayable",
     type: "function",
   },
   {

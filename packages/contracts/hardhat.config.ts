@@ -2,6 +2,7 @@ import "@nomicfoundation/hardhat-toolbox-viem";
 import "dotenv/config";
 import { HardhatUserConfig } from "hardhat/config";
 import "./scripts/deploy";
+import "./scripts/deploy-worldcoin";
 import "./scripts/generate";
 
 const mnemonic = process.env.MNEMONIC;
@@ -70,6 +71,11 @@ const config: HardhatUserConfig = {
       accounts,
       chainId: 5,
     },
+    optimismGoerli: {
+      url: "https://rpc.goerli.optimism.gateway.fm",
+      accounts,
+      chainId: 420,
+    },
   },
   etherscan: {
     customChains: [
@@ -135,8 +141,27 @@ const config: HardhatUserConfig = {
           browserURL: "https://goerli.lineascan.build/",
         },
       },
+      // {
+      //   network: "goerli",
+      //   chainId: 5,
+      //   urls: {
+      //     //Blockscout
+      //     apiURL: "https://goerli.etherscan.io/api",
+      //     browserURL: "https://goerli.etherscan.io/",
+      //   },
+      // },
+      {
+        network: "goerliOptimism",
+        chainId: 420,
+        urls: {
+          apiURL: "https://api-goerli-optimism.etherscan.io/api",
+          browserURL: "https://goerli-optimism.etherscan.io",
+        },
+      },
     ],
+    // apiKey: process.env.ETHERSCAN_API_KEY || "",
     apiKey: {
+      goerliOptimism: process.env.OPTIMISM_ETHERSCAN_API_KEY || "",
       polygonMumbai: process.env.POLYGONSCAN_API_KEY || "",
       goerli: process.env.ETHERSCAN_API_KEY || "",
       chiado: process.env.GNOSISSCAN_API_KEY || "", // doesn't work

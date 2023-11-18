@@ -6,6 +6,7 @@ export const CONTRACT_NAMES = [
   "TestERC20",
   "DemoFiStrategy",
   "SparkLendStrategy",
+  "Worldcoin",
 ] as const;
 
 export type ContractName = (typeof CONTRACT_NAMES)[number];
