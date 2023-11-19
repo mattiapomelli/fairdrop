@@ -13,6 +13,8 @@ export const env = createEnv({
     NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID: z.string().min(1),
     NEXT_PUBLIC_ALCHEMY_URI_GOERLI: z.string().url(),
     NEXT_PUBLIC_SITE_URL: z.string().url(),
+    NEXT_PUBLIC_WORLDCOIN_APP_ID: z.string().min(1),
+    NEXT_PUBLIC_WORLDCOIN_ACTION_ID: z.string().min(1),
   },
   // Only need to destructure client variables
   experimental__runtimeEnv: {
@@ -21,6 +23,8 @@ export const env = createEnv({
     NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID,
     NEXT_PUBLIC_ALCHEMY_URI_GOERLI: process.env.NEXT_PUBLIC_ALCHEMY_URI_GOERLI,
     NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL,
+    NEXT_PUBLIC_WORLDCOIN_APP_ID: process.env.NEXT_PUBLIC_WORLDCOIN_APP_ID,
+    NEXT_PUBLIC_WORLDCOIN_ACTION_ID: process.env.NEXT_PUBLIC_WORLDCOIN_ACTION_ID,
   },
   skipValidation: process.env.SKIP_ENV_VALIDATION === "true",
 });

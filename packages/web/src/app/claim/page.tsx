@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { toast } from "@/components/ui/use-toast";
 import contractAddressesJson from "@/config/addresses.json";
+import { env } from "@/env.mjs";
 import { useClaimDeposit } from "@/lib/deposit/use-claim-deposit";
 import { useDeposit } from "@/lib/deposit/use-deposit";
 import { useChainId } from "@/lib/hooks/use-chain-id";
@@ -104,8 +105,8 @@ export default function ClaimPage({ searchParams }: PageProps) {
 
       {deposit.worldIdVerification && !proof ? (
         <IDKitWidget
-          app_id="app_staging_0caea5b44fb78ba852926ffb770d4ef1" // must be an app set to on-chain
-          action="claim-airdrop"
+          app_id={env.NEXT_PUBLIC_WORLDCOIN_APP_ID} // must be an app set to on-chain
+          action={env.NEXT_PUBLIC_WORLDCOIN_ACTION_ID}
           signal={address} // prevents tampering with a message
           onSuccess={onSuccess}
           // no use for handleVerify, so it is removed
