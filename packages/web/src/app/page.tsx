@@ -6,9 +6,11 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -36,6 +38,9 @@ type CreateAirdropData = z.infer<typeof createAirdropSchema>;
 export default function Home() {
   const form = useForm<CreateAirdropData>({
     resolver: zodResolver(createAirdropSchema),
+    defaultValues: {
+      worldIdVerification: false,
+    },
   });
   const {
     register,
@@ -176,6 +181,25 @@ export default function Home() {
               <p className="text-destructive px-1 text-xs">{errors.lockedDays.message}</p>
             )}
           </div>
+          <FormField
+            control={form.control}
+            name="worldIdVerification"
+            render={({ field }) => (
+              <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 shadow">
+                <FormControl>
+                  <Checkbox checked={field.value} onCheckedChange={field.onChange} />
+                </FormControl>
+                <div className="space-y-1 leading-none">
+                  <FormLabel>World ID Verification</FormLabel>
+                  <FormDescription>
+                    Require users to verify their World ID to claim their position. This ensures
+                    that only verified humans can claim and that a user can only claim a single
+                    position.
+                  </FormDescription>
+                </div>
+              </FormItem>
+            )}
+          />
           <Button disabled={isPending} loading={isPending}>
             Create
           </Button>

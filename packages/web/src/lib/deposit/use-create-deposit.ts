@@ -22,6 +22,7 @@ export const createAirdropSchema = z.object({
   token: z.string().min(1),
   protocol: z.string().min(1),
   lockedDays: z.number().int(),
+  worldIdVerification: z.boolean().default(false),
 });
 
 type CreateAirdropData = z.infer<typeof createAirdropSchema>;
@@ -82,7 +83,7 @@ export function useCreateDeposit(
           depositAmount,
           strategyAddress,
           false,
-          false,
+          data.worldIdVerification,
         ],
       });
 

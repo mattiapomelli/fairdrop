@@ -158,7 +158,7 @@ describe("Fairdrop", () => {
         expect(deposit[3].toLowerCase()).to.equal(
           testErc20Address.toLowerCase()
         );
-        // Check withdrawableAt matches
+        // Check strategy matches
         expect(deposit[4].toLowerCase()).to.equal(
           demoFiStrategyAddress.toLowerCase()
         );

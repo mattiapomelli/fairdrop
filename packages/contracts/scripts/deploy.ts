@@ -127,7 +127,10 @@ task(
       // Deploy DemoFi
       const demoFi = await viem.deployContract(
         "contracts/test/DemoFiPool.sol:DemoFiPool",
-        []
+        [],
+        {
+          // gasPrice: BigInt(100000000), // For Goerli because it's freaking slow
+        }
       );
       console.log(
         `📰 Contract DemoFi deployed to ${network.name} at ${demoFi.address}`
