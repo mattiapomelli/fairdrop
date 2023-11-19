@@ -50,6 +50,9 @@ deploy-worldcoin:
 
 # -------------- VERIFICATION -------------- #
 
+verify-fairdrop:
+	npx hardhat verify --network mantleTestnet 0x3d80048f6ade5df57c1f3b5a444c8ccf0f162ae1 "0x0000000000000000000000000000000000000000" "" ""
+
 verify-scroll: 
 	npx hardhat deploy --network scrollSepolia --verify
 

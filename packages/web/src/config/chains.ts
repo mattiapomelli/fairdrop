@@ -1,4 +1,5 @@
 import {
+  arbitrumGoerli,
   gnosisChiado,
   goerli,
   hardhat,
@@ -28,6 +29,7 @@ const getChains = () => {
         polygonZkEvmTestnet,
         gnosisChiado,
         scrollSepolia,
+        arbitrumGoerli,
       ];
     case "testnet":
       return [
@@ -38,6 +40,7 @@ const getChains = () => {
         polygonZkEvmTestnet,
         gnosisChiado,
         scrollSepolia,
+        arbitrumGoerli,
       ];
     case "mainnet":
       throw [polygon];
@@ -60,4 +63,5 @@ export const CHAIN_ICON: { [chainId: number]: Icon } = {
   [polygonZkEvmTestnet.id]: HardhatIcon,
   [gnosisChiado.id]: HardhatIcon,
   [scrollSepolia.id]: HardhatIcon,
+  [arbitrumGoerli.id]: HardhatIcon,
 };
