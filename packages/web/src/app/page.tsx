@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
+import { LinkRow } from "@/components/link-row";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -54,7 +55,9 @@ export default function Home() {
 
   const chainId = useChainId();
 
-  const [links, setLinks] = useState<string[]>([]);
+  const [links, setLinks] = useState<string[]>([
+    // "https://demo-fi.vercel.app/airdrop/"
+  ]);
 
   const { mutate, isPending } = useCreateDeposit({
     onSuccess(links) {
@@ -72,9 +75,15 @@ export default function Home() {
     mutate(data);
   });
 
+  const isSparkLendAvailable = chainId === 1 || chainId === 5 || chainId === 100;
+
   return (
-    <div className="container">
+    <div className="container max-w-xl ">
       <h1 className="mb-4 text-3xl font-bold">Create new airdrop</h1>
+      <p className="mb-4 text-xl">
+        Don&apos;t airdrop token that will be dumped instantly. Airdrop DeFi positions into your own
+        protocol and keep your users involved.
+      </p>
       <Form {...form}>
         <form onSubmit={onSubmit} className="flex flex-col gap-4">
           <div>
@@ -110,8 +119,12 @@ export default function Home() {
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value={"DemoFi"}>DemoFi</SelectItem>
-                      <SelectItem value={"SparkLend"}>SparkLend</SelectItem>
+                      <SelectItem value={"DemoFi"}>
+                        DemoFi {isSparkLendAvailable ? " (Not available on this chain)" : ""}
+                      </SelectItem>
+                      <SelectItem value={"SparkLend"}>
+                        SparkLend {!isSparkLendAvailable ? " (Not available on this chain)" : ""}
+                      </SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage />
@@ -154,10 +167,11 @@ export default function Home() {
                     </FormControl>
                     <SelectContent>
                       <SelectItem value={contractAddresses.TestERC20[chainId]}>
-                        {contractAddresses.TestERC20[chainId]}
+                        {contractAddresses.TestERC20[chainId] || "Not available on this chain"}{" "}
+                        (TestERC20)
                       </SelectItem>
                       <SelectItem value={DAI_ADDRESS[chainId]}>
-                        {DAI_ADDRESS[chainId]} (DAI)
+                        {DAI_ADDRESS[chainId] || "Not available on this chain"} (DAI)
                       </SelectItem>
                     </SelectContent>
                   </Select>
@@ -168,7 +182,7 @@ export default function Home() {
           />
           <div>
             <Label htmlFor="lockedDays" className="mb-1 block">
-              Locked days
+              Locked days (days before users can claim their position)
             </Label>
             <Input
               id="lockedDays"
@@ -214,7 +228,7 @@ export default function Home() {
                     <Checkbox checked={field.value} onCheckedChange={field.onChange} />
                   </FormControl>
                   <div className="space-y-1 leading-none">
-                    <FormLabel>Require previous interactions</FormLabel>
+                    <FormLabel>Require previous interactions (powered by Axiom)</FormLabel>
                     <FormDescription>
                       Requires users to have previously interacted with SparkLend to be eligible for
                       the airdrop.
@@ -230,11 +244,16 @@ export default function Home() {
           </Button>
         </form>
       </Form>
-      <div className="flex flex-col gap-2">
-        {links.map((link) => (
-          <div key={link}>{link}</div>
-        ))}
-      </div>
+      {links.length > 0 && (
+        <div>
+          <h3 className="mb-4 mt-10 text-xl font-bold">Airdrop Links</h3>
+          <div className="flex flex-col gap-4">
+            {links.map((link) => (
+              <LinkRow key={link} link={link} />
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

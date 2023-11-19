@@ -7,7 +7,7 @@ export function AxiomVerification() {
 
   if (isPending) {
     return (
-      <div className="flex justify-center py-20">
+      <div className="flex items-center justify-center gap-2 py-20">
         Checking eligibility <Spinner />
       </div>
     );
@@ -17,14 +17,16 @@ export function AxiomVerification() {
   if (!eligible || !inputs || !callback) {
     return (
       <>
-        <div className="text-center">You are not eligible for this airdrop :(</div>
+        <div className="text-destructive mt-5 text-center">
+          You are not eligible for this airdrop :(
+        </div>
       </>
     );
   }
 
   return (
     <div>
-      <p>You are aligible for this airdrop!</p>
+      <p className="mb-4">You are aligible for this airdrop!</p>
       <AxiomBuildQuery callback={callback} inputs={inputs} />
     </div>
   );

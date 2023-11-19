@@ -94,7 +94,7 @@ export function useClaimDeposit(
       return receipt;
     },
     onError(error) {
-      console.log("Error");
+      console.log("Error: ", error);
       toast({
         title: "Something went wrong.",
         description: error.message || "Please try again.",

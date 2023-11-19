@@ -6,8 +6,7 @@
   },
   "TestERC20": {
     "31337": "0xc1ee53801a6350311a5942da3084ad500ca30620",
-    "420": "0x2bb51ffdc8d908d0b9d29b0adf62cd9c58b127ab",
-    "5": "0x"
+    "420": "0x2bb51ffdc8d908d0b9d29b0adf62cd9c58b127ab"
   },
   "DemoFi": {
     "31337": "0xe393fb46c545aad9dc4f37b6d149d3401863bac5",

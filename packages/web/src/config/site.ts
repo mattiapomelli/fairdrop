@@ -9,7 +9,7 @@ export type SiteConfig = {
 };
 
 export const siteConfig: SiteConfig = {
-  name: "Web3 Starter",
+  name: "AirdropFi",
   description: "Web3 Starter",
   url: "http://localhost:3000",
   ogImage: "http://localhost:3000/og.jpg",

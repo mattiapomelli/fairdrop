@@ -34,9 +34,9 @@ const contractAddresses = contractAddressesJson as Record<string, Record<number,
 const getProtocolFromStrategy = (strategyAddress: string, chainId: number) => {
   console.log(strategyAddress, chainId);
 
-  const protocol = Object.entries(contractAddresses).find(
-    ([, addresses]) => addresses[chainId].toLowerCase() === strategyAddress.toLowerCase(),
-  );
+  const protocol = Object.entries(contractAddresses).find(([, addresses]) => {
+    return (addresses[chainId] || "").toLowerCase() === strategyAddress.toLowerCase();
+  });
 
   if (protocol === undefined) {
     return "";
@@ -105,11 +105,22 @@ export default function ClaimPage({ searchParams }: PageProps) {
   }
 
   return (
-    <div className="container">
-      <h1 className="mb-4 text-3xl font-bold">
-        Claim a position on {getProtocolFromStrategy(deposit.strategy, chainId)}
+    <div className="container mt-20 flex max-w-xl flex-col gap-4">
+      <h1 className="text-3xl font-bold">
+        Activate a position on {getProtocolFromStrategy(deposit.strategy, chainId)}
       </h1>
-      <p>Amount: {formatEther(deposit.amount)}</p>
+      <p className="text-lg">This position was airdropped to you by the protocol.</p>
+      <div className="flex flex-col gap-3">
+        <p className="text-lg">
+          <b>Amount</b>: {formatEther(deposit.amount)}
+        </p>
+        <p className="text-lg">
+          <b>Withdrawable at: </b>
+          {deposit.withdrawableAt
+            ? new Date(Number(deposit.withdrawableAt) * 1000).toLocaleString()
+            : "N/A"}
+        </p>
+      </div>
 
       {deposit.worldIdVerification && !proof && (
         <IDKitWidget
@@ -130,8 +141,8 @@ export default function ClaimPage({ searchParams }: PageProps) {
       {((!deposit.worldIdVerification && !deposit.checkEligibility) ||
         (deposit.worldIdVerification && proof) ||
         (deposit.checkEligibility && isEligible)) && (
-        <Button onClick={() => onClaim()} disabled={isPending} loading={isPending}>
-          Claim
+        <Button onClick={() => onClaim()} disabled={isPending} loading={isPending} size="lg">
+          Activate
         </Button>
       )}
     </div>
