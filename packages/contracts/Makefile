@@ -71,7 +71,7 @@ supply-sparklend:
 	npx hardhat run scripts/playground/supply-sparklend.ts --network $(NETWORK)
 
 get-sparklend-balance:
-	npx hardhat run scripts/playground/get-sparklend-balance.ts --network $(NETWORK)
+	npx hardhat run scripts/playground/get-sparklend-balance.ts --network goerli
 
 verify-worldcoin:
 	npx hardhat run scripts/playground/verify-worldcoin.ts --network $(NETWORK)

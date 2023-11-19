@@ -1,6 +1,6 @@
 {
   "Fairdrop": {
-    "5": "0xb79a7aab2663fc711258fb39df823b93a8463982",
+    "5": "0xe2e48da5b7ea04123bb0dcd106b295a818d63abf",
     "420": "0x330e249d7ee36652932ef9667483e9415d82ca9c",
     "31337": "0x07b9837e81b917451690f2ef4752ac5f1434450b"
   },
@@ -14,7 +14,7 @@
     "31337": "0x58f7fc8d443507b9a14a0fe33330f07c85b474e9"
   },
   "SparkLendStrategy": {
-    "5": "0x46c67948cfb8f392066d7a1c851c701a2acbcca2"
+    "5": "0x093a80ed681478124fd6162f4f69314888b0c444"
   },
   "SparkLendPool": {
     "5": "0x26ca51Af4506DE7a6f0785D20CD776081a05fF6d"

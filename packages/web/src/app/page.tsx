@@ -24,6 +24,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { toast } from "@/components/ui/use-toast";
+import { DAI_ADDRESS } from "@/config/addresses";
 import contractAddressesJson from "@/config/addresses.json";
 import { createAirdropSchema, useCreateDeposit } from "@/lib/deposit/use-create-deposit";
 import { useChainId } from "@/lib/hooks/use-chain-id";
@@ -147,9 +148,9 @@ export default function Home() {
                       <SelectItem value={contractAddresses.TestERC20[chainId]}>
                         {contractAddresses.TestERC20[chainId]}
                       </SelectItem>
-                      {/* <SelectItem value={contractAddresses.TestERC20[chainId]}>
-                        {contractAddresses.TestERC20[chainId]} (TestERC20)
-                      </SelectItem> */}
+                      <SelectItem value={DAI_ADDRESS[chainId]}>
+                        {DAI_ADDRESS[chainId]} (DAI)
+                      </SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage />

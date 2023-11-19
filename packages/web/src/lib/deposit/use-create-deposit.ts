@@ -13,7 +13,7 @@ import { useChainId } from "@/lib/hooks/use-chain-id";
 const contractAddresses = contractAddressesJson as Record<string, Record<number, `0x${string}`>>;
 
 const getStrategyFromProtocol = (protocol: string, chainId: number) => {
-  return contractAddresses[protocol][chainId];
+  return contractAddresses[`${protocol}Strategy`][chainId];
 };
 
 export const createAirdropSchema = z.object({
@@ -36,10 +36,12 @@ export function useCreateDeposit(
     mutationFn: async (data: CreateAirdropData) => {
       // Generate random strings as passwords
       const passwords = Array.from({ length: data.quantity }, () => {
-        return Math.random().toString(36).slice(2).concat(Math.random().toString(36).slice(2));
+        return Math.random().toString(36).slice(2);
       });
 
-      const hashedPasswords = passwords.map((password) => keccak256(toHex(password, { size: 32 })));
+      const hexPasswords = passwords.map((password) => toHex(password, { size: 32 }));
+
+      const hashedPasswords = hexPasswords.map((password) => keccak256(password));
 
       // Get date of withdraw in seconds
       const withdrawableAt = BigInt(Math.floor(Date.now() / 1000) + data.lockedDays * 86400);
