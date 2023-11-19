@@ -25,6 +25,8 @@ task(
     const publicClient = await viem.getPublicClient();
     const chainId = publicClient.chain.id;
 
+    console.log("Axiom V2 query address: ", AXIOM_V2_QUERY_ADDRESS[chainId]);
+
     const balance = await publicClient.getBalance({
       address: deployer.account.address,
     });

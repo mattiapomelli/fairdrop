@@ -21,10 +21,17 @@ export const networkHasWorldcoin = (network: string) => {
   );
 };
 
+const AXIOM_V2_QUERY_ADDRESS_MOCK_GOERLI =
+  "0xf15cc7B983749686Cd1eCca656C3D3E46407DC1f";
+const AXIOM_V2_QUERY_ADDRESS_PRODUCTION_GOERLI =
+  "0xBd5307B0Bf573E3F2864Af960167b24Aa346952b";
+
 export const AXIOM_V2_QUERY_ADDRESS: Record<number, `0x${string}`> = {
   [mainnet.id]: "0x0000000000000000000000000000000000000000",
-  [goerli.id]: "0xf15cc7B983749686Cd1eCca656C3D3E46407DC1f", // Goerli (Mock)
-  // [goerli.id]: "0xBd5307B0Bf573E3F2864Af960167b24Aa346952b", // Goerli (Real)
+  [goerli.id]:
+    process.env.AXIOM_IS_MOCK === "true"
+      ? AXIOM_V2_QUERY_ADDRESS_MOCK_GOERLI
+      : AXIOM_V2_QUERY_ADDRESS_PRODUCTION_GOERLI,
 };
 
 export const AXIOM_CALLBACK_QUERY_SCHEMA = toHex(

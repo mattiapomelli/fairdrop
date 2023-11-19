@@ -7,7 +7,7 @@ import {
 import { parseEther } from "viem";
 
 async function main() {
-  const [deployer, alice, bob] = await viem.getWalletClients();
+  const [deployer, alice, bob, carol, dave] = await viem.getWalletClients();
   const publicClient = await viem.getPublicClient();
 
   const network = hre.network.name;
@@ -27,7 +27,7 @@ async function main() {
   const txHash = await token.write.approve(
     [sparkLendPool.address, depositAmount],
     {
-      account: alice.account,
+      account: dave.account,
     }
   );
 
@@ -41,11 +41,11 @@ async function main() {
     [
       DAI_ADDRESS[hre.network.config.chainId || 1],
       depositAmount,
-      alice.account.address,
+      dave.account.address,
       0,
     ],
     {
-      account: alice.account,
+      account: dave.account,
     }
   );
 

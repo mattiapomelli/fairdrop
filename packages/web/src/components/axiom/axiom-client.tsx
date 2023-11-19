@@ -17,6 +17,8 @@ export function AxiomClient() {
   const axiomQueryAbi = axiom.getAxiomQueryAbi();
   const axiomQueryAddress = axiom.getAxiomQueryAddress();
 
+  console.log("Axiom query address: ", axiomQueryAddress);
+
   const claimParams = [
     builtQuery?.sourceChainId,
     builtQuery?.dataQueryHash,

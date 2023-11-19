@@ -68,7 +68,7 @@ withdraw-deposit:
 	npx hardhat run scripts/playground/2-withdraw-deposit.ts --network $(NETWORK)
 
 supply-sparklend:
-	npx hardhat run scripts/playground/supply-sparklend.ts --network $(NETWORK)
+	npx hardhat run scripts/playground/supply-sparklend.ts --network goerli
 
 get-sparklend-balance:
 	npx hardhat run scripts/playground/get-sparklend-balance.ts --network goerli
