@@ -5,7 +5,7 @@ import { useState } from "react";
 import { formatEther } from "viem";
 import { useAccount } from "wagmi";
 
-import { AxiomVerification } from "@/components/axiom/axiom-verification";
+// import { AxiomVerification } from "@/components/axiom/axiom-verification";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { toast } from "@/components/ui/use-toast";
@@ -136,7 +136,7 @@ export default function ClaimPage({ searchParams }: PageProps) {
         </IDKitWidget>
       )}
 
-      {deposit.checkEligibility && !isEligible && <AxiomVerification />}
+      {/* {deposit.checkEligibility && !isEligible && <AxiomVerification />} */}
 
       {((!deposit.worldIdVerification && !deposit.checkEligibility) ||
         (deposit.worldIdVerification && proof) ||
