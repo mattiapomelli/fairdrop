@@ -47,7 +47,10 @@ export default function Home() {
     handleSubmit,
     formState: { errors },
     reset,
+    watch,
   } = form;
+
+  const protocol = watch("protocol");
 
   const chainId = useChainId();
 
@@ -200,6 +203,28 @@ export default function Home() {
               </FormItem>
             )}
           />
+
+          {protocol === "SparkLend" && (
+            <FormField
+              control={form.control}
+              name="checkEligibility"
+              render={({ field }) => (
+                <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 shadow">
+                  <FormControl>
+                    <Checkbox checked={field.value} onCheckedChange={field.onChange} />
+                  </FormControl>
+                  <div className="space-y-1 leading-none">
+                    <FormLabel>Require previous interactions</FormLabel>
+                    <FormDescription>
+                      Requires users to have previously interacted with SparkLend to be eligible for
+                      the airdrop.
+                    </FormDescription>
+                  </div>
+                </FormItem>
+              )}
+            />
+          )}
+
           <Button disabled={isPending} loading={isPending}>
             Create
           </Button>

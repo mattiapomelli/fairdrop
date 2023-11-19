@@ -6,7 +6,7 @@ import { ThemeProvider } from "next-themes";
 import { ReactNode } from "react";
 import { WagmiConfig } from "wagmi";
 
-import { AxiomProvider } from "@/components/axiom-provider";
+import { AxiomProvider } from "@/components/axiom/axiom-provider";
 import { CHAINS } from "@/config/chains";
 import { env } from "@/env.mjs";
 

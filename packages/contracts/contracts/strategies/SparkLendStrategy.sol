@@ -50,14 +50,6 @@ contract SparkLendStrategy is IStrategy, AxiomV2Client, Ownable {
     // =========================== Strategy Functions ==============================
 
     function supply(address asset, uint256 amount) external {
-        // Check if user is verified
-        // if (verificationEnabled) {
-        //     require(
-        //         isVerified[user],
-        //         "SparkLendStrategy: User is not verified"
-        //     );
-        // }
-
         // Send tokens to this contract
         IERC20(asset).transferFrom(msg.sender, address(this), amount);
 
@@ -94,14 +86,6 @@ contract SparkLendStrategy is IStrategy, AxiomV2Client, Ownable {
         return isVerified[user];
     }
 
-    // =========================== Owner functions ==============================
-
-    // function setVerificationEnabled(
-    //     bool _verificationEnabled
-    // ) external onlyOwner {
-    //     verificationEnabled = _verificationEnabled;
-    // }
-
     // =========================== Axiom functions ==============================
 
     function updateCallbackQuerySchema(
@@ -119,11 +103,6 @@ contract SparkLendStrategy is IStrategy, AxiomV2Client, Ownable {
         bytes32[] calldata axiomResults,
         bytes calldata /* extraData */
     ) internal virtual override {
-        // require(
-        //     !hasClaimed[callerAddr],
-        //     "Autonomous Airdrop: User has already claimed this airdrop"
-        // );
-
         bytes32 eventSchema = axiomResults[0];
         address userEventAddress = address(uint160(uint256(axiomResults[1])));
         uint32 blockNumber = uint32(uint256(axiomResults[2]));

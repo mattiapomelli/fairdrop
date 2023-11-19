@@ -5,6 +5,7 @@ import { useState } from "react";
 import { formatEther } from "viem";
 import { useAccount } from "wagmi";
 
+import { AxiomVerification } from "@/components/axiom/axiom-verification";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { toast } from "@/components/ui/use-toast";
@@ -12,6 +13,7 @@ import contractAddressesJson from "@/config/addresses.json";
 import { env } from "@/env.mjs";
 import { useClaimDeposit } from "@/lib/deposit/use-claim-deposit";
 import { useDeposit } from "@/lib/deposit/use-deposit";
+import { useIsEligible } from "@/lib/deposit/use-is-eligible";
 import { useChainId } from "@/lib/hooks/use-chain-id";
 
 interface PageProps {
@@ -30,6 +32,8 @@ interface SearchParams {
 const contractAddresses = contractAddressesJson as Record<string, Record<number, `0x${string}`>>;
 
 const getProtocolFromStrategy = (strategyAddress: string, chainId: number) => {
+  console.log(strategyAddress, chainId);
+
   const protocol = Object.entries(contractAddresses).find(
     ([, addresses]) => addresses[chainId].toLowerCase() === strategyAddress.toLowerCase(),
   );
@@ -52,6 +56,10 @@ export default function ClaimPage({ searchParams }: PageProps) {
   const { data: deposit } = useDeposit({
     depositId: Number(depositId),
     enabled: depositId !== undefined && depositId !== "",
+  });
+  const { data: isEligible, isPending: isPendingEligible } = useIsEligible({
+    strategyAddress: deposit?.strategy || "0x",
+    enabled: deposit !== undefined,
   });
 
   const { mutate, isPending } = useClaimDeposit({
@@ -84,7 +92,7 @@ export default function ClaimPage({ searchParams }: PageProps) {
     setProof(result);
   };
 
-  if (!deposit) {
+  if (!deposit || isPendingEligible) {
     return (
       <div className="flex justify-center py-20">
         <Spinner />
@@ -103,7 +111,7 @@ export default function ClaimPage({ searchParams }: PageProps) {
       </h1>
       <p>Amount: {formatEther(deposit.amount)}</p>
 
-      {deposit.worldIdVerification && !proof ? (
+      {deposit.worldIdVerification && !proof && (
         <IDKitWidget
           app_id={env.NEXT_PUBLIC_WORLDCOIN_APP_ID} // must be an app set to on-chain
           action={env.NEXT_PUBLIC_WORLDCOIN_ACTION_ID}
@@ -115,7 +123,13 @@ export default function ClaimPage({ searchParams }: PageProps) {
         >
           {({ open }) => <button onClick={open}>Verify with World ID</button>}
         </IDKitWidget>
-      ) : (
+      )}
+
+      {deposit.checkEligibility && !isEligible && <AxiomVerification />}
+
+      {((!deposit.worldIdVerification && !deposit.checkEligibility) ||
+        (deposit.worldIdVerification && proof) ||
+        (deposit.checkEligibility && isEligible)) && (
         <Button onClick={() => onClaim()} disabled={isPending} loading={isPending}>
           Claim
         </Button>

@@ -6,18 +6,23 @@
   },
   "TestERC20": {
     "31337": "0xc1ee53801a6350311a5942da3084ad500ca30620",
-    "420": "0x2bb51ffdc8d908d0b9d29b0adf62cd9c58b127ab"
+    "420": "0x2bb51ffdc8d908d0b9d29b0adf62cd9c58b127ab",
+    "5": "0x"
   },
   "DemoFi": {
     "31337": "0xe393fb46c545aad9dc4f37b6d149d3401863bac5",
-    "420": "0x50961a1766487b75ec6ae198caca66222fa76ba4"
+    "420": "0x50961a1766487b75ec6ae198caca66222fa76ba4",
+    "5": "0x"
   },
   "DemoFiStrategy": {
     "31337": "0x58f7fc8d443507b9a14a0fe33330f07c85b474e9",
+    "5": "0x",
     "420": "0xb4b8fe8b7a4e94e52d866172a0b29625f5d2fc66"
   },
   "SparkLendStrategy": {
-    "5": "0x093a80ed681478124fd6162f4f69314888b0c444"
+    "31337": "0x",
+    "5": "0x093a80ed681478124fd6162f4f69314888b0c444",
+    "420": "0x"
   },
   "SparkLendPool": {
     "5": "0x26ca51Af4506DE7a6f0785D20CD776081a05fF6d"

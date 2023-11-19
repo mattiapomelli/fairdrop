@@ -22,6 +22,7 @@ export const createAirdropSchema = z.object({
   token: z.string().min(1),
   protocol: z.string().min(1),
   lockedDays: z.number().int(),
+  checkEligibility: z.boolean().default(false),
   worldIdVerification: z.boolean().default(false),
 });
 
@@ -82,7 +83,7 @@ export function useCreateDeposit(
           tokenAddress,
           depositAmount,
           strategyAddress,
-          false,
+          data.checkEligibility,
           data.worldIdVerification,
         ],
       });
