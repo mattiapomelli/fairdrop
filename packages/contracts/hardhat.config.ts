@@ -76,6 +76,12 @@ const config: HardhatUserConfig = {
       accounts,
       chainId: 420,
     },
+    arbitrumGoerli: {
+      url: "https://goerli-rollup.arbitrum.io/rpc",
+      chainId: 421613,
+      accounts,
+      //accounts: [GOERLI_TESTNET_PRIVATE_KEY]
+    },
   },
   etherscan: {
     customChains: [
@@ -110,7 +116,7 @@ const config: HardhatUserConfig = {
         },
       },
       {
-        network: "mantleTestnet",
+        network: "mantleTest",
         chainId: 5001,
         urls: {
           apiURL: "https://explorer.testnet.mantle.xyz/api",
@@ -159,19 +165,19 @@ const config: HardhatUserConfig = {
         },
       },
     ],
-    // apiKey: process.env.ETHERSCAN_API_KEY || "",
-    apiKey: {
-      goerliOptimism: process.env.OPTIMISM_ETHERSCAN_API_KEY || "",
-      polygonMumbai: process.env.POLYGONSCAN_API_KEY || "",
-      goerli: process.env.ETHERSCAN_API_KEY || "",
-      chiado: process.env.GNOSISSCAN_API_KEY || "", // doesn't work
-      gnosis: process.env.GNOSISSCAN_API_KEY || "", // doesn't work
-      scrollSepolia: "abc", // doesn't work
-      mantleTestnet: process.env.ETHERSCAN_API_KEY || "",
-      polygonZkEVMTestnet: process.env.ETHERSCAN_API_KEY || "", // doesn't work
-      baseGoerli: "PLACEHOLDER_STRING", // doesn't work
-      lineaTestnet: process.env.LINEASCAN_API_KET || "",
-    },
+    apiKey: process.env.ETHERSCAN_API_KEY || "",
+    // apiKey: {
+    //   goerliOptimism: process.env.OPTIMISM_ETHERSCAN_API_KEY || "",
+    //   polygonMumbai: process.env.POLYGONSCAN_API_KEY || "",
+    //   goerli: process.env.ETHERSCAN_API_KEY || "",
+    //   chiado: process.env.GNOSISSCAN_API_KEY || "", // doesn't work
+    //   gnosis: process.env.GNOSISSCAN_API_KEY || "", // doesn't work
+    //   scrollSepolia: "abc", // doesn't work
+    //   mantleTestnet: process.env.ETHERSCAN_API_KEY || "",
+    //   polygonZkEVMTestnet: process.env.ETHERSCAN_API_KEY || "", // doesn't work
+    //   baseGoerli: "PLACEHOLDER_STRING", // doesn't work
+    //   lineaTestnet: process.env.LINEASCAN_API_KET || "",
+    // },
   },
   gasReporter: {
     enabled: true,

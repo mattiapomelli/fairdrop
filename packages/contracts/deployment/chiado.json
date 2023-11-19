@@ -1,3 +1,7 @@
 {
-  "Storage": "0xb54b7d8a3e62add188be274789e6c79b55339ea1"
+  "Storage": "0xb54b7d8a3e62add188be274789e6c79b55339ea1",
+  "Fairdrop": "0x69cd63fc067f7690c79e64e2f7e6aa70a851e480",
+  "TestERC20": "0xa9dc11b476d1e06e277ffbf898faeff0b754b030",
+  "DemoFi": "0x80d137260d3d70c88feec2772fc690497fbf181f",
+  "DemoFiStrategy": "0x1193d512086923a8a724d6ad61364228b90758da"
 }

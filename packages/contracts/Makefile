@@ -13,19 +13,22 @@ deploy-mumbai:
 	npx hardhat deploy --network mumbai --verify
 
 deploy-gnosis:
-	npx hardhat deploy --network mumbai --verify
+	npx hardhat deploy --network gnosis --save
 
 deploy-chiado:
-	npx hardhat deploy --network chiado --verify
+	npx hardhat deploy --network chiado --save
 
 deploy-scroll: 
-	npx hardhat deploy --network scrollSepolia --verify
+	npx hardhat deploy --network scrollSepolia --save
 
 deploy-mantle: 
-	npx hardhat deploy --network scrollSepolia --verify
+	npx hardhat deploy --network mantleTestnet --save
 
 deploy-polygon-zk-evm: 
-	npx hardhat deploy --network polygonZkEVMTestnet --verify
+	npx hardhat deploy --network polygonZkEVMTestnet --save
+
+deploy-arbitrum:
+	npx hardhat deploy --network arbitrumGoerli --save
 
 deploy-base: 
 	npx hardhat deploy --network baseGoerli --verify
@@ -49,6 +52,9 @@ deploy-worldcoin:
 
 verify-scroll: 
 	npx hardhat deploy --network scrollSepolia --verify
+
+verify-mantle: 
+	npx hardhat verify --network mantleTestnet --save
 
 verify-goerli: 
 	npx hardhat verify --network goerli 0x5c97716b79d6146de6b2d1ffb238fae003d1244e "0x11cA3127182f7583EfC416a8771BD4d11Fae4334" "app_staging_0caea5b44fb78ba852926ffb770d4ef1" "claim-airdrop"
